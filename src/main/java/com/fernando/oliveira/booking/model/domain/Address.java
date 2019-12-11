@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.Builder;
@@ -34,6 +36,8 @@ public class Address implements Serializable {
 	@Column(name="STATE", nullable=false)
 	private String state;
 	
+	@OneToOne
+	@JoinColumn(name="TRAVELER_ID")
 	private Traveler traveler;
 
 }

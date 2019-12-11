@@ -46,6 +46,9 @@ public class Traveler implements Serializable{
 	@OneToOne(mappedBy="traveler", cascade=CascadeType.ALL)
 	private Phone phone;
 	
+	@OneToOne(mappedBy="traveler", cascade=CascadeType.ALL)
+	private Address adress;
+	
 	@OneToMany(mappedBy="traveler")
 	@JsonIgnore
 	private List<Booking> bookings;
