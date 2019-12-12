@@ -15,7 +15,7 @@ import lombok.Builder;
 import lombok.Data;
 
 @Entity
-@Table(name="ADDRESS" , schema="BOOKING")
+@Table(name="ADDRESS" , schema="BKN")
 @Data
 @Builder
 public class Address implements Serializable {
@@ -30,10 +30,10 @@ public class Address implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name="CITY", nullable=false)
+	@Column(name="CITY", nullable=true)
 	private String city;
 	
-	@Column(name="STATE", nullable=false)
+	@Column(name="STATE", nullable=true)
 	private String state;
 	
 	@OneToOne

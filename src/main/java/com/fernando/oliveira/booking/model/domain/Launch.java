@@ -26,7 +26,7 @@ import lombok.Builder;
 import lombok.Data;
 
 @Entity
-@Table(name="LAUNCH" , schema="BOOKING")
+@Table(name="LAUNCH" , schema="BKN")
 @Data
 @Builder
 public class Launch implements Serializable {

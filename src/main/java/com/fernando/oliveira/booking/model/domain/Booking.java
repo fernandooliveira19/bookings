@@ -26,7 +26,7 @@ import lombok.Builder;
 import lombok.Data;
 
 @Entity
-@Table(name="BOOKING", schema="BOOKING")
+@Table(name="BOOKING", schema="BKN")
 @Data
 @Builder
 public class Booking implements Serializable {
@@ -60,7 +60,7 @@ public class Booking implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private PaymentStatus paymentStatus;
 	
-	@Column(name="BOOKIGN_STATUS", nullable=false)
+	@Column(name="BOOKING_STATUS", nullable=false)
 	@Enumerated(EnumType.STRING)
 	private BookingStatus bookingStatus;
 	
