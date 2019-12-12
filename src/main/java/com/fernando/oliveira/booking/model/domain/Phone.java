@@ -15,7 +15,7 @@ import lombok.Builder;
 import lombok.Data;
 
 @Entity
-@Table(name="PHONE", schema="BOOKING")
+@Table(name="PHONE", schema="BKN")
 @Data
 @Builder
 public class Phone implements Serializable{
@@ -30,8 +30,8 @@ public class Phone implements Serializable{
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name="DDD", nullable=false)
-	private Integer ddd;
+	@Column(name="PREFIX", nullable=false)
+	private Integer prefix;
 	
 	@Column(name="NUMBER", nullable=false)
 	private String number;

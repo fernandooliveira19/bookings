@@ -13,20 +13,15 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.Builder;
 import lombok.Data;
 
 @Entity
-@Table(name="TRAVELER", schema="BOOKING")
+@Table(name="TRAVELER", schema="BKN")
 @Data
 @Builder
 public class Traveler implements Serializable{
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -46,8 +41,10 @@ public class Traveler implements Serializable{
 	@OneToOne(mappedBy="traveler", cascade=CascadeType.ALL)
 	private Phone phone;
 	
+	@OneToOne(mappedBy="traveler", cascade=CascadeType.ALL)
+	private Address adress;
+	
 	@OneToMany(mappedBy="traveler")
-	@JsonIgnore
 	private List<Booking> bookings;
 	
 		
