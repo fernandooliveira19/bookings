@@ -11,13 +11,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="ADDRESS" , schema="BKN")
+@Table(name="ADDRESS" )
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Address implements Serializable {
 
 	/**

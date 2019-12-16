@@ -21,7 +21,7 @@ public class TravelerDTO {
 	
 	private String document;
 	
-	private Phone phone;
+	private List<Phone> phones;
 	
 	private Address adress;
 	

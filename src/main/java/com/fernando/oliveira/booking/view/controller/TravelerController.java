@@ -1,7 +1,5 @@
 package com.fernando.oliveira.booking.view.controller;
 
-import java.io.Serializable;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +27,8 @@ public class TravelerController {
 		Traveler traveler = Traveler.builder()
 								.name(dto.getName())
 								.email(dto.getEmail())
-								.phone(dto.getPhone())
-								.adress(dto.getAdress()).build();
+								.phones(dto.getPhones())
+								.address(dto.getAdress()).build();
 		try {
 			Traveler travelerSaved = travelerService.save(traveler);
 			return new ResponseEntity(travelerSaved, HttpStatus.CREATED);

@@ -13,7 +13,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -23,13 +22,17 @@ import org.springframework.format.annotation.NumberFormat.Style;
 import com.fernando.oliveira.booking.model.domain.enums.BookingStatus;
 import com.fernando.oliveira.booking.model.domain.enums.PaymentStatus;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="BOOKING", schema="BKN")
+@Table(name="BOOKING")
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Booking implements Serializable {
 
 	/**
