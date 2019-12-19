@@ -6,10 +6,6 @@ public interface TravelerService {
 
 	public Traveler save(Traveler traveler);
 
-//	public void isValidEmail(String email);
-
-//	public void travelerHaveUniqueEmail(Traveler traveler);
-	
 	public void validTravelerEmail(Traveler traveler);
 
 	public Traveler findByName(String name);
@@ -17,5 +13,7 @@ public interface TravelerService {
 	public Traveler findByEmail(String email);
 
 	public Traveler findByDocument(String document);
+
+	public void validTravelerName(Traveler traveler);
 
 }

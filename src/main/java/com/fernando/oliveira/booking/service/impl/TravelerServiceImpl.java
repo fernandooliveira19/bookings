@@ -27,12 +27,11 @@ public class TravelerServiceImpl implements TravelerService {
 	@Transactional
 	public Traveler save(Traveler traveler) {
 
-//		isValidEmail(traveler.getEmail());
-//		
-//		travelerHaveUniqueEmail(traveler);
 		
 		validTravelerEmail(traveler);
-
+		
+		validTravelerName(traveler);
+		
 		Traveler savedTraveler = repository.save(traveler);
 
 		for (Phone phone : savedTraveler.getPhones()) {
@@ -127,6 +126,25 @@ public class TravelerServiceImpl implements TravelerService {
 			return result.get();
 		}
 		return null;
+	}
+
+	@Override
+	public void validTravelerName(Traveler traveler) {
+
+		List<Traveler> resultList = repository.findAllByName(traveler.getName());
+		
+		if(!resultList.isEmpty()) {
+			
+			for(Traveler trv : resultList) {
+				
+				if(!trv.getId().equals(traveler.getId())) {
+					throw new TravelerException("Já existe viajante com o nome informado");
+				}
+				
+			}
+			
+		}
+		
 	}
 
 }
