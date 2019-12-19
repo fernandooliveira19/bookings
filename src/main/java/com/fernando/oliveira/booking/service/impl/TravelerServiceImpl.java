@@ -1,10 +1,12 @@
 package com.fernando.oliveira.booking.service.impl;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fernando.oliveira.booking.model.dao.PhoneRepository;
 import com.fernando.oliveira.booking.model.dao.TravelerRepository;
@@ -22,11 +24,14 @@ public class TravelerServiceImpl implements TravelerService {
 	@Autowired
 	private PhoneRepository phoneRepository;
 
+	@Transactional
 	public Traveler save(Traveler traveler) {
 
-		isValidEmail(traveler.getEmail());
+//		isValidEmail(traveler.getEmail());
+//		
+//		travelerHaveUniqueEmail(traveler);
 		
-		travelerHaveUniqueEmail(traveler);
+		validTravelerEmail(traveler);
 
 		Traveler savedTraveler = repository.save(traveler);
 
@@ -41,7 +46,7 @@ public class TravelerServiceImpl implements TravelerService {
 		return savedTraveler;
 	}
 
-	public void isValidEmail(String email) {
+	private void isValidEmail(String email) {
 
 		if (email == null) {
 			throw new TravelerException("Email é obrigatorio");
@@ -69,16 +74,27 @@ public class TravelerServiceImpl implements TravelerService {
 		}
 
 	}
-
-	@Override
-	public boolean travelerHaveUniqueEmail(Traveler traveler) {
+	
+	public void validTravelerEmail(Traveler traveler) {
 		
-		Optional<Traveler> result = repository.findByEmail(traveler.getEmail());
-		if(result.isPresent()) {
-			return true;
+		isValidEmail(traveler.getEmail());
+		
+		travelerHaveUniqueEmail(traveler);
+	}
+
+	
+	private void travelerHaveUniqueEmail(Traveler traveler) {
+		
+		List<Traveler> resultList = repository.findAllByEmail(traveler.getEmail());
+		
+		if(!resultList.isEmpty()) {
+			for(Traveler tvl : resultList) {
+				if(!tvl.getId().equals(traveler.getId())){
+					throw new TravelerException("Já existe viajante com o email informado");
+				}
+			}
 		}
 		
-		return false;
 	}
 
 	@Override

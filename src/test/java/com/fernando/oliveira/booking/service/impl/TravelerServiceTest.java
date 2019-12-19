@@ -20,13 +20,13 @@ import com.fernando.oliveira.booking.service.exception.TravelerException;
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 @SpringBootTest
-//@AutoConfigureTestDatabase
+
 public class TravelerServiceTest {
 
 	@Autowired
 	private TravelerService travelerService;
 
-	@Test
+	@Test(expected = Test.None.class)
 	public void travelerMustHavePhone() {
 
 		Phone phone = Phone.builder().prefix(new Integer(11)).number("1111111111").build();
@@ -130,16 +130,16 @@ public class TravelerServiceTest {
 	@Test(expected = TravelerException.class)
 	public void shoudReturnExceptionUniqueEmail() {
 
-		Phone phone = Phone.builder().prefix(new Integer(11)).number("111111111").build();
+		Phone phone = Phone.builder().prefix(new Integer(11)).number("77777777").build();
 		List<Phone> phones = new ArrayList<Phone>();
 		phones.add(phone);
-		Traveler traveler = Traveler.builder().name("Traveler 01").email("traveler01@gmail.com").document("11111111111")
+		Traveler traveler = Traveler.builder().name("Traveler 07").email("traveler07@gmail.com").document("77777777777")
 				.phones(phones).build();
 
-		Phone phone2 = Phone.builder().prefix(new Integer(11)).number("22222222").build();
+		Phone phone2 = Phone.builder().prefix(new Integer(11)).number("888888888").build();
 		List<Phone> phones2 = new ArrayList<Phone>();
-		phones.add(phone);
-		Traveler traveler2 = Traveler.builder().name("Traveler 02").email("traveler01@gmail.com").document("22222222222")
+		phones.add(phone2);
+		Traveler traveler2 = Traveler.builder().name("Traveler 08").email("traveler07@gmail.com").document("88888888888")
 				.phones(phones2).build();
 		
 		
