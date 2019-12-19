@@ -10,4 +10,10 @@ public interface TravelerService {
 
 	public boolean travelerHaveUniqueEmail(Traveler traveler);
 
+	public Traveler findByName(String name);
+
+	public Traveler findByEmail(String email);
+
+	public Traveler findByDocument(String document);
+
 }

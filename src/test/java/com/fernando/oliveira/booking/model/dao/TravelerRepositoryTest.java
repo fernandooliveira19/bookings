@@ -4,24 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fernando.oliveira.booking.model.domain.Phone;
 import com.fernando.oliveira.booking.model.domain.Traveler;
 
 
 @ActiveProfiles("test")
-@ExtendWith(SpringExtension.class)
+@RunWith(SpringRunner.class)
 @DataJpaTest
-@AutoConfigureTestDatabase(replace = Replace.NONE)
+@AutoConfigureTestDatabase
 public class TravelerRepositoryTest {
 
 	@Autowired
@@ -38,8 +37,8 @@ public class TravelerRepositoryTest {
 				.phones(phones).build();
 		repository.save(traveler);
 		
-		Assertions.assertNotNull(traveler);
-		Assertions.assertNotNull(traveler.getId());
+		Assert.assertNotNull(traveler);
+		Assert.assertNotNull(traveler.getId());
 		
 	}
 	
@@ -58,7 +57,7 @@ public class TravelerRepositoryTest {
 		
 		Optional<Traveler> result = repository.findByEmail("fer.a.oliveira19@gmail.com");
 		
-		Assertions.assertTrue(result.isPresent());
+		Assert.assertTrue(result.isPresent());
 		
 	}
 	
@@ -77,7 +76,7 @@ public class TravelerRepositoryTest {
 		
 		Optional<Traveler> result = repository.findByDocument("29683018882");
 		
-		Assertions.assertTrue(result.isPresent());
+		Assert.assertTrue(result.isPresent());
 		
 	}	
 	

@@ -28,7 +28,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="LAUNCH" )
+@Table(name="LAUNCH")
 @Data
 @Builder
 @NoArgsConstructor

@@ -1,10 +1,7 @@
 package com.fernando.oliveira.booking.service.impl;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -82,6 +79,38 @@ public class TravelerServiceImpl implements TravelerService {
 		}
 		
 		return false;
+	}
+
+	@Override
+	public Traveler findByName(String name) {
+		Optional<Traveler> result = repository.findByName(name);
+		
+		if(result.isPresent()) {
+			return result.get();
+		}
+		return null;
+		
+	}
+
+	@Override
+	public Traveler findByEmail(String email) {
+		Optional<Traveler> result = repository.findByEmail(email);
+		
+		if(result.isPresent()) {
+			return result.get();
+		}
+		return null;
+	}
+
+	@Override
+	public Traveler findByDocument(String document) {
+		
+		Optional<Traveler> result = repository.findByDocument(document);
+		
+		if(result.isPresent()) {
+			return result.get();
+		}
+		return null;
 	}
 
 }
