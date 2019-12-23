@@ -21,7 +21,6 @@ import com.fernando.oliveira.booking.service.exception.TravelerException;
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 @SpringBootTest
-
 public class TravelerServiceTest {
 
 	@Autowired
@@ -134,15 +133,18 @@ public class TravelerServiceTest {
 		Phone phone = Phone.builder().prefix(new Integer(11)).number("77777777").build();
 		List<Phone> phones = new ArrayList<Phone>();
 		phones.add(phone);
-		Traveler traveler = Traveler.builder().name("Traveler 07").email("traveler07@gmail.com").document("77777777777")
+		Traveler traveler = Traveler.builder().name("Traveler 09").email("traveler09@gmail.com").document("9999999999")
 				.phones(phones).build();
 
+		travelerService.save(traveler);
+		
+		
 		Phone phone2 = Phone.builder().prefix(new Integer(11)).number("888888888").build();
 		List<Phone> phones2 = new ArrayList<Phone>();
 		phones.add(phone2);
-		Traveler traveler2 = Traveler.builder().name("Traveler 08").email("traveler07@gmail.com").document("88888888888")
+		Traveler traveler2 = Traveler.builder().name("Traveler 10").email("traveler09@gmail.com").document("10101010")
 				.phones(phones2).build();
-		travelerService.save(traveler);
+		
 		
 		Throwable exception  = Assertions.catchThrowable(() -> travelerService.save(traveler2));
 		Assertions.assertThat(exception).isInstanceOf(TravelerException.class).hasMessage("Já existe viajante com o email informado");
@@ -156,26 +158,53 @@ public class TravelerServiceTest {
 		Phone phone = Phone.builder().prefix(new Integer(11)).number("77777777").build();
 		List<Phone> phones = new ArrayList<Phone>();
 		phones.add(phone);
-		Traveler traveler = Traveler.builder().name("Traveler 07").email("traveler07@gmail.com").document("77777777777")
+		Traveler traveler = Traveler.builder().name("Traveler 07").email("traveler07@gmail.com").document("777777")
 				.phones(phones).build();
-		Traveler traveler2 = Traveler.builder().name("Traveler 07").email("traveler08@gmail.com").document("88888888888")
+		Traveler traveler2 = Traveler.builder().name("Traveler 07").email("traveler08@gmail.com").document("88")
 				.phones(phones).build();
 
 		travelerService.save(traveler);
 		
 		Throwable exception = Assertions.catchThrowable(() -> travelerService.save(traveler2));
 		
-		Assertions.assertThat(exception).isInstanceOf(TravelerException.class).hasMessage("Já existe viajante com o email informado");
+		Assertions.assertThat(exception).isInstanceOf(TravelerException.class).hasMessage("Já existe viajante com o nome informado");
 
 	}
 
 	@Test
 	public void shoudReturnExceptionUniqueDocument() {
+		
+		Phone phone = Phone.builder().prefix(new Integer(11)).number("77777777").build();
+		List<Phone> phones = new ArrayList<Phone>();
+		phones.add(phone);
+		Traveler traveler = Traveler.builder().name("Traveler 11").email("traveler11@gmail.com").document("88888888888")
+				.phones(phones).build();
+		
+		Traveler traveler2 = Traveler.builder().name("Traveler 12").email("traveler12@gmail.com").document("88888888888")
+				.phones(phones).build();
+
+		travelerService.save(traveler);
+		
+		Throwable exception = Assertions.catchThrowable(() -> travelerService.save(traveler2));
+		
+		Assertions.assertThat(exception).isInstanceOf(TravelerException.class).hasMessage("Já existe viajante com o documento informado");
+
 
 	}
 
 	@Test
 	public void shoudReturnExceptionInvalidEmail() {
 
+		Phone phone = Phone.builder().prefix(new Integer(11)).number("77777777").build();
+		List<Phone> phones = new ArrayList<Phone>();
+		phones.add(phone);
+		Traveler traveler = Traveler.builder().name("Traveler 07").email("traveler07@gmail").document("77777777777")
+				.phones(phones).build();
+		
+		Throwable exception = Assertions.catchThrowable(() -> travelerService.save(traveler));
+		
+		Assertions.assertThat(exception).isInstanceOf(TravelerException.class).hasMessage("Email inválido");
+
+		
 	}
 }

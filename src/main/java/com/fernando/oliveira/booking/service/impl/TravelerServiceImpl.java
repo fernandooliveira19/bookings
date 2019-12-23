@@ -1,12 +1,14 @@
 package com.fernando.oliveira.booking.service.impl;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import com.fernando.oliveira.booking.model.dao.PhoneRepository;
 import com.fernando.oliveira.booking.model.dao.TravelerRepository;
@@ -27,11 +29,8 @@ public class TravelerServiceImpl implements TravelerService {
 	@Transactional
 	public Traveler save(Traveler traveler) {
 
-		
-		validTravelerEmail(traveler);
-		
-		validTravelerName(traveler);
-		
+		validateDataTraveler(traveler);
+
 		Traveler savedTraveler = repository.save(traveler);
 
 		for (Phone phone : savedTraveler.getPhones()) {
@@ -43,6 +42,23 @@ public class TravelerServiceImpl implements TravelerService {
 		}
 
 		return savedTraveler;
+	}
+
+	private void validTravelerDocument(Traveler traveler) {
+
+		if (StringUtils.hasText(traveler.getDocument())) {
+
+			List<Traveler> resultList = repository.findAllByDocument(traveler.getDocument());
+
+			if (!resultList.isEmpty()) {
+				for (Traveler tvl : resultList) {
+					if (!tvl.getId().equals(traveler.getId())) {
+						throw new TravelerException("Já existe viajante com o documento informado");
+					}
+				}
+			}
+		}
+
 	}
 
 	private void isValidEmail(String email) {
@@ -73,45 +89,44 @@ public class TravelerServiceImpl implements TravelerService {
 		}
 
 	}
-	
+
 	public void validTravelerEmail(Traveler traveler) {
-		
+
 		isValidEmail(traveler.getEmail());
-		
+
 		travelerHaveUniqueEmail(traveler);
 	}
 
-	
 	private void travelerHaveUniqueEmail(Traveler traveler) {
-		
+
 		List<Traveler> resultList = repository.findAllByEmail(traveler.getEmail());
-		
-		if(!resultList.isEmpty()) {
-			for(Traveler tvl : resultList) {
-				if(!tvl.getId().equals(traveler.getId())){
+
+		if (!resultList.isEmpty()) {
+			for (Traveler tvl : resultList) {
+				if (!tvl.getId().equals(traveler.getId())) {
 					throw new TravelerException("Já existe viajante com o email informado");
 				}
 			}
 		}
-		
+
 	}
 
 	@Override
 	public Traveler findByName(String name) {
 		Optional<Traveler> result = repository.findByName(name);
-		
-		if(result.isPresent()) {
+
+		if (result.isPresent()) {
 			return result.get();
 		}
 		return null;
-		
+
 	}
 
 	@Override
 	public Traveler findByEmail(String email) {
 		Optional<Traveler> result = repository.findByEmail(email);
-		
-		if(result.isPresent()) {
+
+		if (result.isPresent()) {
 			return result.get();
 		}
 		return null;
@@ -119,10 +134,10 @@ public class TravelerServiceImpl implements TravelerService {
 
 	@Override
 	public Traveler findByDocument(String document) {
-		
+
 		Optional<Traveler> result = repository.findByDocument(document);
-		
-		if(result.isPresent()) {
+
+		if (result.isPresent()) {
 			return result.get();
 		}
 		return null;
@@ -132,19 +147,48 @@ public class TravelerServiceImpl implements TravelerService {
 	public void validTravelerName(Traveler traveler) {
 
 		List<Traveler> resultList = repository.findAllByName(traveler.getName());
-		
-		if(!resultList.isEmpty()) {
-			
-			for(Traveler trv : resultList) {
-				
-				if(!trv.getId().equals(traveler.getId())) {
+
+		if (!resultList.isEmpty()) {
+
+			for (Traveler trv : resultList) {
+
+				if (!trv.getId().equals(traveler.getId())) {
 					throw new TravelerException("Já existe viajante com o nome informado");
 				}
-				
+
 			}
-			
+
 		}
+
+	}
+
+	@Override
+	@Transactional
+	public Traveler update(Traveler traveler) {
+		validateDataTraveler(traveler);
+		Objects.requireNonNull(traveler.getId());
+		return repository.save(traveler);
+	}
+
+	@Override
+	public List<Traveler> find(Traveler traveler) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Traveler findById(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private void validateDataTraveler(Traveler traveler) {
 		
+		validTravelerEmail(traveler);
+
+		validTravelerName(traveler);
+
+		validTravelerDocument(traveler);
 	}
 
 }

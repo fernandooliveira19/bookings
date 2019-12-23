@@ -1,4 +1,4 @@
-package com.fernando.oliveira.booking.view.controller;
+package com.fernando.oliveira.booking.api;
 
 import org.springframework.web.bind.annotation.RestController;
 

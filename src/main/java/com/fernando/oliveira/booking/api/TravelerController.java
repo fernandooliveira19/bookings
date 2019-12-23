@@ -1,4 +1,4 @@
-package com.fernando.oliveira.booking.view.controller;
+package com.fernando.oliveira.booking.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
