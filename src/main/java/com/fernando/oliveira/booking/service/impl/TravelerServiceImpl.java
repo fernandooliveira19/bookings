@@ -6,6 +6,9 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.ExampleMatcher.StringMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -170,16 +173,22 @@ public class TravelerServiceImpl implements TravelerService {
 		return repository.save(traveler);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
+	@Transactional(readOnly = true)
 	public List<Traveler> find(Traveler traveler) {
-		// TODO Auto-generated method stub
-		return null;
+		@SuppressWarnings("rawtypes")
+		Example example = Example.of(traveler, 
+				ExampleMatcher.matching()
+				.withIgnoreCase()
+				.withStringMatcher(StringMatcher.CONTAINING));
+		return repository.findAll(example);
 	}
 
 	@Override
-	public Traveler findById(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+	@Transactional(readOnly = true)
+	public Optional<Traveler> findById(Long id) {
+		return repository.findById(id);
 	}
 
 	private void validateDataTraveler(Traveler traveler) {

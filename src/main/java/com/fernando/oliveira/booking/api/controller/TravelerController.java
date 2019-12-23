@@ -1,4 +1,4 @@
-package com.fernando.oliveira.booking.api;
+package com.fernando.oliveira.booking.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fernando.oliveira.booking.api.dto.TravelerDTO;
 import com.fernando.oliveira.booking.model.domain.Traveler;
 import com.fernando.oliveira.booking.service.TravelerService;
-import com.fernando.oliveira.booking.view.dto.TravelerDTO;
 
 @RestController
 @RequestMapping("/api/travelers")
