@@ -19,7 +19,7 @@ import com.fernando.oliveira.booking.model.domain.Phone;
 import com.fernando.oliveira.booking.model.domain.Traveler;
 
 
-@ActiveProfiles("test")
+@ActiveProfiles("dev")
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace=Replace.NONE)

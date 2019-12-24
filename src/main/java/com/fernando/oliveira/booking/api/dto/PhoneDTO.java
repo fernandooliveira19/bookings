@@ -2,6 +2,8 @@ package com.fernando.oliveira.booking.api.dto;
 
 import java.util.List;
 
+import com.fernando.oliveira.booking.api.dto.TravelerDTO.TravelerDTOBuilder;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,20 +13,11 @@ import lombok.RequiredArgsConstructor;
 @Builder
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class TravelerDTO {
-	
+public class PhoneDTO {
+
 	private Long id;
 	
-	private String name;
+	private Integer prefix;
 	
-	private String email;
-	
-	private String document;
-	
-	private List<PhoneDTO> phones;
-	
-//	private Address adress;
-//	
-//	private List<Booking> bookings;
-
+	private String number;
 }

@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -45,6 +47,7 @@ public class Phone implements Serializable{
 	 */
 	@ManyToOne
 	@JoinColumn(name="TRAVELER_ID", insertable = true, updatable = true)
+	@JsonIgnore
 	private Traveler traveler;
 
 }
