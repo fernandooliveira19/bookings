@@ -1,5 +1,8 @@
 package com.fernando.oliveira.booking.service;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.fernando.oliveira.booking.model.domain.Traveler;
 
 public interface TravelerService {
@@ -15,5 +18,11 @@ public interface TravelerService {
 	public Traveler findByDocument(String document);
 
 	public void validTravelerName(Traveler traveler);
+	
+	public Traveler update(Traveler traveler);
+	
+	public List<Traveler> find(Traveler traveler);
+	
+	public Optional<Traveler> findById(Long id);
 
 }

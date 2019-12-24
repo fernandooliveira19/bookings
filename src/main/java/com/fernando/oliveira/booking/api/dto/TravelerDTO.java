@@ -1,4 +1,4 @@
-package com.fernando.oliveira.booking.view.dto;
+package com.fernando.oliveira.booking.api.dto;
 
 import java.util.List;
 

@@ -18,6 +18,8 @@ public interface TravelerRepository extends JpaRepository<Traveler,Long>{
 	public Optional<Traveler> findByEmail(String email);
 
 	public List<Traveler> findAllByName(String name);
+
+	public List<Traveler> findAllByDocument(String document);
 	
 	
 }
