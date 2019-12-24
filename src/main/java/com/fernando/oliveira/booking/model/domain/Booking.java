@@ -29,7 +29,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="BOOKING")
+@Table(name="BOOKING", schema="bkn")
 @Data
 @Builder
 @NoArgsConstructor

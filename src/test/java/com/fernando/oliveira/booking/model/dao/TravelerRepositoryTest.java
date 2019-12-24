@@ -9,7 +9,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -20,11 +22,14 @@ import com.fernando.oliveira.booking.model.domain.Traveler;
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 @DataJpaTest
-@AutoConfigureTestDatabase
+@AutoConfigureTestDatabase(replace=Replace.NONE)
 public class TravelerRepositoryTest {
 
 	@Autowired
 	public TravelerRepository repository;
+	
+	@Autowired
+	TestEntityManager entityManager;
 	
 	@Test
 	public void createTraveler() {
@@ -35,7 +40,7 @@ public class TravelerRepositoryTest {
 				.name("Fernando")
 				.email("fer.a.oliveira19@gmail.com")
 				.phones(phones).build();
-		repository.save(traveler);
+		entityManager.persist(traveler);
 		
 		Assert.assertNotNull(traveler);
 		Assert.assertNotNull(traveler.getId());
@@ -53,7 +58,7 @@ public class TravelerRepositoryTest {
 				.name("Fernando")
 				.email("fer.a.oliveira19@gmail.com")
 				.phones(phones).build();
-		repository.save(traveler);
+		entityManager.persist(traveler);
 		
 		Optional<Traveler> result = repository.findByEmail("fer.a.oliveira19@gmail.com");
 		
@@ -72,7 +77,7 @@ public class TravelerRepositoryTest {
 				.email("fer.a.oliveira19@gmail.com")
 				.document("29683018882")
 				.phones(phones).build();
-		repository.save(traveler);
+		entityManager.persist(traveler);
 		
 		Optional<Traveler> result = repository.findByDocument("29683018882");
 		
