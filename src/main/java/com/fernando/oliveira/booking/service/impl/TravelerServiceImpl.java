@@ -23,11 +23,14 @@ import com.fernando.oliveira.booking.service.exception.TravelerException;
 @Service
 public class TravelerServiceImpl implements TravelerService {
 
-	@Autowired
-	private TravelerRepository repository;
-
-	@Autowired
-	private PhoneRepository phoneRepository;
+	
+	TravelerRepository repository;
+	PhoneRepository phoneRepository;
+	
+	public TravelerServiceImpl(TravelerRepository repository, PhoneRepository phoneRepository) {
+		this.repository=repository;
+		this.phoneRepository = phoneRepository;
+	}
 
 	@Transactional
 	public Traveler save(Traveler traveler) {
@@ -198,6 +201,12 @@ public class TravelerServiceImpl implements TravelerService {
 		validTravelerName(traveler);
 
 		validTravelerDocument(traveler);
+	}
+
+	@Override
+	public Traveler getById(Long id) {
+		
+		return repository.getOne(id);
 	}
 
 }

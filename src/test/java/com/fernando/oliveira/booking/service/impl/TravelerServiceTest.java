@@ -2,12 +2,12 @@ package com.fernando.oliveira.booking.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -20,6 +20,7 @@ import com.fernando.oliveira.booking.service.exception.TravelerException;
 
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
+@SpringBootTest
 public class TravelerServiceTest {
 
 	@Autowired
@@ -203,8 +204,28 @@ public class TravelerServiceTest {
 		Throwable exception = Assertions.catchThrowable(() -> travelerService.save(traveler));
 		
 		Assertions.assertThat(exception).isInstanceOf(TravelerException.class).hasMessage("Email inválido");
-
 		
 	}
+	
+	@Test
+	public void shouldUpdateTravelerName() {
+		//cenario
+		Optional<Traveler> result = travelerService.findById(1L);
+		
+		Traveler traveler = result.get();
+		traveler.setName("traveler updated");
+		
+		Traveler travelerUpdate = travelerService.update(traveler);
+		
+		Assert.assertEquals("traveler updated", travelerUpdate.getName());
+		
+		
+		
+		
+	}
+	
+	
+	
+	
 	
 }

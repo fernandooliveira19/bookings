@@ -7,7 +7,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootApplication
-@AutoConfigureTestDatabase(replace=Replace.NONE)
 public class BookingApplication {
 
 	public static void main(String[] args) {

@@ -6,7 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,19 +35,10 @@ public class TravelerController {
 	@PostMapping
 	public ResponseEntity save(@RequestBody TravelerDTO dto) {
 		
-		List<Phone> phones = new ArrayList<Phone>();
-		for(PhoneDTO phoneDTO : dto.getPhones()) {
-			Phone phone = phoneService.convertToEntity(phoneDTO);
-			phones.add(phone);
-		}
+		List<Phone> phones = getListPhones(dto);
 		
+		Traveler traveler = convertTravelerDTO(dto, phones);
 		
-		Traveler traveler = Traveler.builder()
-								.name(dto.getName())
-								.email(dto.getEmail())
-								.document(dto.getDocument())
-								.phones(phones)
-								.build();
 		try {
 			Traveler travelerSaved = travelerService.save(traveler);
 			return new ResponseEntity(travelerSaved, HttpStatus.CREATED);
@@ -53,6 +46,42 @@ public class TravelerController {
 		}catch(TravelerException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
+	}
+
+	private Traveler convertTravelerDTO(TravelerDTO dto, List<Phone> phones) {
+		Traveler traveler = Traveler.builder()
+								.name(dto.getName())
+								.email(dto.getEmail())
+								.document(dto.getDocument())
+								.phones(phones)
+								.build();
+		return traveler;
+	}
+
+	private List<Phone> getListPhones(TravelerDTO dto) {
+		List<Phone> phones = new ArrayList<Phone>();
+		for(PhoneDTO phoneDTO : dto.getPhones()) {
+			Phone phone = phoneService.convertToEntity(phoneDTO);
+			phones.add(phone);
+		}
+		return phones;
+	}
+	
+	@PutMapping("{id}")
+	public ResponseEntity update( @PathVariable("id") Long id,  @RequestBody TravelerDTO dto) {
+		
+		List<Phone> phones = getListPhones(dto);
+		Traveler traveler = convertTravelerDTO(dto, phones);
+		
+		try {
+		Traveler travelerUpdated = travelerService.update(traveler);
+		
+			return new ResponseEntity(travelerUpdated, HttpStatus.OK);
+		}catch (TravelerException e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+		
+		
 	}
 	
 	

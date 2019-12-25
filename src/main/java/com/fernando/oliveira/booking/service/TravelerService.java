@@ -24,5 +24,7 @@ public interface TravelerService {
 	public List<Traveler> find(Traveler traveler);
 	
 	public Optional<Traveler> findById(Long id);
+	
+	public Traveler getById(Long id);
 
 }
