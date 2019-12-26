@@ -2,6 +2,7 @@ package com.fernando.oliveira.booking.api.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,63 +28,58 @@ public class TravelerController {
 
 	@Autowired
 	TravelerService travelerService;
-	
+
 	@Autowired
 	PhoneService phoneService;
-	
-	
+
 	@PostMapping
 	public ResponseEntity save(@RequestBody TravelerDTO dto) {
-		
+
 		List<Phone> phones = converterDTOToListPhone(dto);
-		
+
 		Traveler traveler = convertTravelerDTO(dto, phones);
-		
+
 		try {
 			Traveler travelerSaved = travelerService.save(traveler);
 			return new ResponseEntity(travelerSaved, HttpStatus.CREATED);
-			
-		}catch(TravelerException e) {
+
+		} catch (TravelerException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
 
 	private Traveler convertTravelerDTO(TravelerDTO dto, List<Phone> phones) {
-		Traveler traveler = Traveler.builder()
-								.name(dto.getName())
-								.email(dto.getEmail())
-								.document(dto.getDocument())
-								.phones(phones)
-								.build();
+		Traveler traveler = Traveler.builder().name(dto.getName()).email(dto.getEmail()).document(dto.getDocument())
+				.phones(phones).build();
 		return traveler;
 	}
 
 	private List<Phone> converterDTOToListPhone(TravelerDTO dto) {
 		List<Phone> phones = new ArrayList<Phone>();
-		for(PhoneDTO phoneDTO : dto.getPhones()) {
+		for (PhoneDTO phoneDTO : dto.getPhones()) {
 			Phone phone = phoneService.convertToEntity(phoneDTO);
 			phones.add(phone);
 		}
 		return phones;
 	}
-	
+
 	@PutMapping("{id}")
-	public ResponseEntity update( @PathVariable("id") Long id,  @RequestBody TravelerDTO dto) {
+	public ResponseEntity update(@PathVariable("id") Long id, @RequestBody TravelerDTO dto) {
+
+		return travelerService.findById(id).map(entity -> {
+			try {
+				List<Phone> phones = converterDTOToListPhone(dto);
+				Traveler traveler = convertTravelerDTO(dto, phones);
+				traveler.setId(entity.getId());
+				travelerService.update(traveler);
+				return ResponseEntity.ok(traveler);
+			} catch (TravelerException e) {
+				return ResponseEntity.badRequest().body(e.getMessage());
+			}
+
+		}).orElseGet(() -> new ResponseEntity("Viajante não encontrado na base de dados", HttpStatus.BAD_REQUEST));
 		
-		List<Phone> phones = converterDTOToListPhone(dto);
-		Traveler traveler = convertTravelerDTO(dto, phones);
-		
-		try {
-		Traveler travelerUpdated = travelerService.update(traveler);
-		
-			return new ResponseEntity(travelerUpdated, HttpStatus.OK);
-		}catch (TravelerException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
-		
-		
+
 	}
-	
-	
-	
+
 }

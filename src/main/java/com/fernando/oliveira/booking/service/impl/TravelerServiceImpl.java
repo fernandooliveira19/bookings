@@ -174,7 +174,18 @@ public class TravelerServiceImpl implements TravelerService {
 	public Traveler update(Traveler traveler) {
 		validateDataTraveler(traveler);
 		Objects.requireNonNull(traveler.getId());
-		return repository.save(traveler);
+		
+		Traveler updatedTraveler = repository.save(traveler);
+		
+		for (Phone phone : updatedTraveler.getPhones()) {
+
+			if (phone != null) {
+				phone.setTraveler(updatedTraveler);
+				phoneRepository.save(phone);
+			}
+		}
+		
+		return updatedTraveler;
 	}
 
 	@SuppressWarnings("unchecked")
