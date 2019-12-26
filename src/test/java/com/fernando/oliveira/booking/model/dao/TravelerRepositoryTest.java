@@ -115,33 +115,5 @@ public class TravelerRepositoryTest {
 		
 	}
 	
-	@Test
-	public void shouldReturnTravelerById() {
-		
-		Phone phone = Phone.builder()
-				.id(1L)
-				.prefix(11)
-				.number("983116777")
-				.build();
-		List<Phone> phones = new ArrayList<Phone>();
-		phones.add(phone);
-		
-		Traveler traveler = Traveler.builder()
-				.id(1L)
-				.name("traveler 01")
-				.email("traveler01@gmail.com")
-				.document("111")
-				.phones(phones)
-				.build();
-		
-		
-		repository.save(traveler);
-		
-		Optional<Traveler> travelerSaved = repository.findById(traveler.getId());
-		
-		Assert.assertTrue(travelerSaved.isPresent());
-		
-	}
-	
 	
 }

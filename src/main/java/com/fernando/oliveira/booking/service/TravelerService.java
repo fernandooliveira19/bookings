@@ -25,6 +25,6 @@ public interface TravelerService {
 	
 	public Optional<Traveler> findById(Long id);
 	
-	public Traveler getById(Long id);
+	public void validateTravelerPhone(Traveler traveler);
 
 }

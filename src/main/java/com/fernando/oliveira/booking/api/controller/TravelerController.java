@@ -35,7 +35,7 @@ public class TravelerController {
 	@PostMapping
 	public ResponseEntity save(@RequestBody TravelerDTO dto) {
 		
-		List<Phone> phones = getListPhones(dto);
+		List<Phone> phones = converterDTOToListPhone(dto);
 		
 		Traveler traveler = convertTravelerDTO(dto, phones);
 		
@@ -58,7 +58,7 @@ public class TravelerController {
 		return traveler;
 	}
 
-	private List<Phone> getListPhones(TravelerDTO dto) {
+	private List<Phone> converterDTOToListPhone(TravelerDTO dto) {
 		List<Phone> phones = new ArrayList<Phone>();
 		for(PhoneDTO phoneDTO : dto.getPhones()) {
 			Phone phone = phoneService.convertToEntity(phoneDTO);
@@ -70,7 +70,7 @@ public class TravelerController {
 	@PutMapping("{id}")
 	public ResponseEntity update( @PathVariable("id") Long id,  @RequestBody TravelerDTO dto) {
 		
-		List<Phone> phones = getListPhones(dto);
+		List<Phone> phones = converterDTOToListPhone(dto);
 		Traveler traveler = convertTravelerDTO(dto, phones);
 		
 		try {

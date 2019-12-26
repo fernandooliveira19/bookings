@@ -23,15 +23,16 @@ import com.fernando.oliveira.booking.service.exception.TravelerException;
 @Service
 public class TravelerServiceImpl implements TravelerService {
 
-	
 	TravelerRepository repository;
 	PhoneRepository phoneRepository;
+	
 	
 	public TravelerServiceImpl(TravelerRepository repository, PhoneRepository phoneRepository) {
 		this.repository=repository;
 		this.phoneRepository = phoneRepository;
 	}
-
+	
+	
 	@Transactional
 	public Traveler save(Traveler traveler) {
 
@@ -196,6 +197,8 @@ public class TravelerServiceImpl implements TravelerService {
 
 	private void validateDataTraveler(Traveler traveler) {
 		
+		validateTravelerPhone(traveler);
+		
 		validTravelerEmail(traveler);
 
 		validTravelerName(traveler);
@@ -204,9 +207,13 @@ public class TravelerServiceImpl implements TravelerService {
 	}
 
 	@Override
-	public Traveler getById(Long id) {
+	public void validateTravelerPhone(Traveler traveler) {
 		
-		return repository.getOne(id);
+		if(traveler.getPhones().isEmpty() || traveler.getPhones() == null) {
+			throw new TravelerException("Viajante deve possuir um telefone");
+		}
+		
 	}
+	
 
 }

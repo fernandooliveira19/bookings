@@ -44,7 +44,7 @@ public class Traveler implements Serializable{
 	@Column(name="DOCUMENT")
 	private String document;
 	
-	@OneToMany(mappedBy="traveler", cascade=CascadeType.ALL, targetEntity = Phone.class, fetch=FetchType.LAZY)
+	@OneToMany(mappedBy="traveler", cascade=CascadeType.ALL, targetEntity = Phone.class, fetch=FetchType.EAGER)
 	private List<Phone> phones;
 	
 	@OneToOne(mappedBy="traveler", cascade=CascadeType.ALL)
