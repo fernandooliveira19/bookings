@@ -36,7 +36,7 @@ public class TravelerServiceImpl implements TravelerService {
 	@Transactional
 	public Traveler save(Traveler traveler) {
 
-		validateDataTraveler(traveler);
+		validate(traveler);
 
 		Traveler savedTraveler = repository.save(traveler);
 
@@ -172,7 +172,7 @@ public class TravelerServiceImpl implements TravelerService {
 	@Override
 	@Transactional
 	public Traveler update(Traveler traveler) {
-		validateDataTraveler(traveler);
+		validate(traveler);
 		Objects.requireNonNull(traveler.getId());
 		
 		Traveler updatedTraveler = repository.save(traveler);
@@ -206,7 +206,7 @@ public class TravelerServiceImpl implements TravelerService {
 		return repository.findById(id);
 	}
 
-	private void validateDataTraveler(Traveler traveler) {
+	public void validate(Traveler traveler) {
 		
 		validateTravelerPhone(traveler);
 		
@@ -224,6 +224,13 @@ public class TravelerServiceImpl implements TravelerService {
 			throw new TravelerException("Viajante deve possuir um telefone");
 		}
 		
+	}
+
+
+	@Override
+	public List<Traveler> findByNameContaining(String name) {
+		
+		return repository.findAllByNameContainingIgnoreCase(name);
 	}
 	
 

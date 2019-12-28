@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
+import org.hibernate.jpa.spi.CriteriaQueryTupleTransformer;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -30,13 +31,9 @@ public class TravelerServiceTest {
 	@Test(expected = Test.None.class)
 	public void travelerMustHavePhone() {
 
-		Phone phone = Phone.builder().prefix(new Integer(11)).number("1111111111").build();
-		List<Phone> phones = new ArrayList<Phone>();
-		phones.add(phone);
-		Traveler traveler = Traveler.builder().name("Traveler 01").email("traveler01@gmail.com").document("11111111111")
-				.phones(phones).build();
+		Traveler traveler01 = createTravelerByParams("traveler with phone", "withphone@gmail.com", "11113", "11113-2222");
 
-		Traveler result = travelerService.save(traveler);
+		Traveler result = travelerService.save(traveler01);
 
 		Assert.assertNotNull(result);
 		Assert.assertNotNull(result.getPhones());
@@ -47,13 +44,9 @@ public class TravelerServiceTest {
 	@Test
 	public void travelerMustHaveNameAndValidEmail() {
 
-		Phone phone = Phone.builder().prefix(new Integer(11)).number("222222222").build();
-		List<Phone> phones = new ArrayList<Phone>();
-		phones.add(phone);
-		Traveler traveler = Traveler.builder().name("Traveler 02").email("traveler02@gmail.com").document("22222222222")
-				.phones(phones).build();
+		Traveler traveler01 = createTravelerByParams("traveler 01", "traveler01@gmail.com", "1111", "1111-1111");
 
-		Traveler result = travelerService.save(traveler);
+		Traveler result = travelerService.save(traveler01);
 
 		Assert.assertNotNull(result.getName());
 		Assert.assertNotNull(result.getEmail());
@@ -237,8 +230,51 @@ public class TravelerServiceTest {
 		//verificacao
 		Assert.assertEquals("99999-8888", updateTraveler.getPhones().get(0).getNumber());
 		
+	}
+	
+	@Test 
+	public void shouldFindTravelerByName() {
+		Traveler traveler01 = createTravelerByParams("ana", "ana@gmail.com", "11112", "1111-1111");
+		Traveler traveler02 = createTravelerByParams("ana maria", "ana_maria@gmail.com", "2222", "2222-2222");
+		Traveler traveler03 = createTravelerByParams("marta", "marta@gmail.com", "3333", "1111-3333");
+		travelerService.save(traveler01);
+		travelerService.save(traveler02);
+		travelerService.save(traveler03);
 		
 		
+		List<Traveler> resultList = travelerService.findByNameContaining("mar");
+		
+		Assertions.assertThat(resultList.isEmpty()).isFalse();
+		Assertions.assertThat(resultList.size()).isEqualTo(2);
+		
+	}
+	
+	/**
+	 * @return
+	 */
+	private Traveler createTraveler() {
+		Phone phone = Phone.builder().prefix(new Integer(11)).number("988887766").build();
+		List<Phone> phones = new ArrayList<Phone>();
+		phones.add(phone);
+		Traveler traveler = Traveler.builder()
+				.name("traveler 01")
+				.email("traveler01@gmail.com")
+				.document("29683018882")
+				.phones(phones).build();
+		return traveler;
+	}
+	
+	private Traveler createTravelerByParams(String name, String email, String document, String phoneNumber) {
+		
+		Phone phone = Phone.builder().prefix(new Integer(11)).number(phoneNumber).build();
+		List<Phone> phones = new ArrayList<Phone>();
+		phones.add(phone);
+		Traveler traveler = Traveler.builder()
+				.name(name)
+				.email(email)
+				.document(document)
+				.phones(phones).build();
+		return traveler;
 		
 	}
 	

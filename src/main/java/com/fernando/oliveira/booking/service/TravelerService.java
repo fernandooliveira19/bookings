@@ -27,4 +27,6 @@ public interface TravelerService {
 	
 	public void validateTravelerPhone(Traveler traveler);
 
+	public List<Traveler> findByNameContaining(String string);
+
 }

@@ -160,14 +160,16 @@ public class TravelerRepositoryTest {
 		Traveler traveler01 = createTravelerByParams("traveler 01", "traveler01@gmail.com", "1111", "1111-1111");
 		Traveler traveler02 = createTravelerByParams("traveler 02", "traveler02@gmail.com", "2222", "2222-2222");
 		Traveler traveler03 = createTravelerByParams("viajante 03", "traveler03@gmail.com", "3333", "3333-3333");
+		Traveler traveler04 = createTravelerByParams("TRAVELER 04", "traveler04@gmail.com", "4444", "4444-4444");
 		entityManager.persist(traveler02);
 		entityManager.persist(traveler01);
 		entityManager.persist(traveler03);
+		entityManager.persist(traveler04);
 		
-		List<Traveler> resultList = repository.findAllByNameContaining("eler");
+		List<Traveler> resultList = repository.findAllByNameContainingIgnoreCase("eler");
 		
 		Assertions.assertThat(resultList.isEmpty()).isFalse();
-		Assertions.assertThat(resultList.size()).isEqualTo(2);
+		Assertions.assertThat(resultList.size()).isEqualTo(3);
 	}
 	
 	@Test

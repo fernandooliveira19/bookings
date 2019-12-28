@@ -23,7 +23,7 @@ public interface TravelerRepository extends JpaRepository<Traveler,Long>{
 	
 	public List<Traveler> findAllByOrderByNameAsc();
 	
-	public List<Traveler> findAllByNameContaining(String name);
+	public List<Traveler> findAllByNameContainingIgnoreCase(String name);
 	
 	
 }
