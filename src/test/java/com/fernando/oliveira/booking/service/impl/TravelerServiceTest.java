@@ -122,26 +122,14 @@ public class TravelerServiceTest {
 	}
 
 	@Test
-	@Ignore
 	public void shoudReturnExceptionUniqueEmail() {
 
-		Phone phone = Phone.builder().prefix(new Integer(11)).number("77777777").build();
-		List<Phone> phones = new ArrayList<Phone>();
-		phones.add(phone);
-		Traveler traveler = Traveler.builder().name("Traveler 09").email("traveler09@gmail.com").document("9999999999")
-				.phones(phones).build();
-
-		travelerService.save(traveler);
+		Traveler traveler01 = createTravelerByParams("felipe silva", "fe.silva@gmail.com", "1111234", "4444-1111");
+		travelerService.save(traveler01);
+		Traveler traveler02 = createTravelerByParams("fernando silva", "fe.silva@gmail.com", "222276", "2222-7777");
 		
 		
-		Phone phone2 = Phone.builder().prefix(new Integer(11)).number("888888888").build();
-		List<Phone> phones2 = new ArrayList<Phone>();
-		phones.add(phone2);
-		Traveler traveler2 = Traveler.builder().name("Traveler 10").email("traveler09@gmail.com").document("10101010")
-				.phones(phones2).build();
-		
-		
-		Throwable exception  = Assertions.catchThrowable(() -> travelerService.save(traveler2));
+		Throwable exception  = Assertions.catchThrowable(() -> travelerService.save(traveler02));
 		Assertions.assertThat(exception).isInstanceOf(TravelerException.class).hasMessage("Já existe viajante com o email informado");
 		
 				
@@ -247,6 +235,24 @@ public class TravelerServiceTest {
 		Assertions.assertThat(resultList.isEmpty()).isFalse();
 		Assertions.assertThat(resultList.size()).isEqualTo(2);
 		
+	}
+	
+	@Test
+	public void shouldFindAllOrderingByName() {
+		Traveler traveler01 = createTravelerByParams("joao", "joao@gmail.com", "111123", "1111-1111");
+		Traveler traveler02 = createTravelerByParams("paulo", "paulo@gmail.com", "22223", "2222-2222");
+		Traveler traveler03 = createTravelerByParams("eduardo", "eduardo@gmail.com", "33334", "1111-3333");
+		travelerService.save(traveler01);
+		travelerService.save(traveler02);
+		travelerService.save(traveler03);
+		
+		
+		List<Traveler> resultList = travelerService.findAllOrderByName();
+		
+		Assertions.assertThat(resultList.isEmpty()).isFalse();
+		Assertions.assertThat("eduardo").isEqualTo(traveler03.getName());
+		Assertions.assertThat("joao").isEqualTo(traveler01.getName());
+		Assertions.assertThat("paulo").isEqualTo(traveler02.getName());
 	}
 	
 	/**

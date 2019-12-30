@@ -232,6 +232,12 @@ public class TravelerServiceImpl implements TravelerService {
 		
 		return repository.findAllByNameContainingIgnoreCase(name);
 	}
+
+
+	@Override
+	public List<Traveler> findAllOrderByName() {
+		return repository.findAllByOrderByNameAsc();
+	}
 	
 
 }

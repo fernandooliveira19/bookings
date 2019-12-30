@@ -29,4 +29,6 @@ public interface TravelerService {
 
 	public List<Traveler> findByNameContaining(String string);
 
+	public List<Traveler> findAllOrderByName();
+
 }
