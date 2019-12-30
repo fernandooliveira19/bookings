@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -83,7 +85,7 @@ public class TravelerController {
 
 	}
 	
-	@GetMapping
+	@GetMapping("/search")
 	public ResponseEntity findByName(@RequestParam("name") String name) {
 		
 		List<Traveler> resultList = travelerService.findByNameContaining(name);
@@ -95,4 +97,13 @@ public class TravelerController {
 		
 	}
 
+	@GetMapping
+	public ResponseEntity findAll() {
+		List<Traveler> resultList = travelerService.findAllOrderByName();
+		if(resultList.isEmpty()) {
+			return new ResponseEntity("Não foi encontrado resultados",HttpStatus.NO_CONTENT);
+		}
+		
+		return ResponseEntity.ok(resultList);
+	}
 }
