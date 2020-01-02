@@ -255,6 +255,32 @@ public class TravelerServiceTest {
 		Assertions.assertThat("paulo").isEqualTo(traveler02.getName());
 	}
 	
+	@Test
+	public void shouldReturnExceptionWhenEmailIsNull() {
+		
+		Traveler traveler = createTravelerByParams("john", null, "55885", "87845454");
+		
+		Throwable exception = Assertions.catchThrowable(() -> travelerService.save(traveler));
+		
+		Assertions.assertThat(exception).isInstanceOf(TravelerException.class).hasMessage("Email é obrigatorio");
+		
+		
+	}
+	
+	@Test
+	public void shouldReturnExceptionWhenEmailIsInvalid() {
+		
+		Traveler traveler = createTravelerByParams("john travolta", "teste@.", "558853", "587845454");
+		
+		Throwable exception = Assertions.catchThrowable(() -> travelerService.save(traveler));
+		
+		Assertions.assertThat(exception).isInstanceOf(TravelerException.class).hasMessage("Email inválido");
+		
+		
+	}
+	
+	
+	
 	/**
 	 * @return
 	 */
@@ -283,6 +309,8 @@ public class TravelerServiceTest {
 		return traveler;
 		
 	}
+	
+	
 	
 	
 	
