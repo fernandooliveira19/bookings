@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fernando.oliveira.booking.api.dto.PhoneDTO;
@@ -91,9 +92,13 @@ public class TravelerController {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@GetMapping("/search")
-	public ResponseEntity search(@RequestBody TravelerDTO dto) {
+	public ResponseEntity search(@RequestParam("name") String name, @RequestParam("email") String email ) {
 
 		try {
+			TravelerDTO dto = new TravelerDTO();
+			dto.setName(name);
+			dto.setEmail(email);
+			
 			Traveler traveler = convertTravelerDTO(dto);
 			List<Traveler> resultList = travelerService.findAll(traveler);
 			if (resultList.isEmpty()) {
