@@ -21,7 +21,7 @@ public interface TravelerService {
 	
 	public Traveler update(Traveler traveler);
 	
-	public List<Traveler> find(Traveler traveler);
+	public List<Traveler> findAll(Traveler traveler);
 	
 	public Optional<Traveler> findById(Long id);
 	
@@ -30,5 +30,6 @@ public interface TravelerService {
 	public List<Traveler> findByNameContaining(String string);
 
 	public List<Traveler> findAllOrderByName();
+	
 
 }

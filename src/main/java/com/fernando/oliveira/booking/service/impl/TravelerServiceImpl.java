@@ -191,7 +191,7 @@ public class TravelerServiceImpl implements TravelerService {
 	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional(readOnly = true)
-	public List<Traveler> find(Traveler traveler) {
+	public List<Traveler> findAll(Traveler traveler) {
 		@SuppressWarnings("rawtypes")
 		Example example = Example.of(traveler, 
 				ExampleMatcher.matching()
@@ -238,6 +238,7 @@ public class TravelerServiceImpl implements TravelerService {
 	public List<Traveler> findAllOrderByName() {
 		return repository.findAllByOrderByNameAsc();
 	}
+
 	
 
 }
