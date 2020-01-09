@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fernando.oliveira.booking.api.dto.PhoneDTO;
@@ -35,6 +32,7 @@ public class TravelerController {
 	@Autowired
 	PhoneService phoneService;
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@PostMapping
 	public ResponseEntity save(@RequestBody TravelerDTO dto) {
 
@@ -57,6 +55,12 @@ public class TravelerController {
 		return traveler;
 	}
 
+	private Traveler convertTravelerDTO(TravelerDTO dto) {
+		Traveler traveler = Traveler.builder().name(dto.getName()).email(dto.getEmail()).document(dto.getDocument())
+				.build();
+		return traveler;
+	}
+
 	private List<Phone> converterDTOToListPhone(TravelerDTO dto) {
 		List<Phone> phones = new ArrayList<Phone>();
 		for (PhoneDTO phoneDTO : dto.getPhones()) {
@@ -65,7 +69,8 @@ public class TravelerController {
 		}
 		return phones;
 	}
-
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@PutMapping("{id}")
 	public ResponseEntity update(@PathVariable("id") Long id, @RequestBody TravelerDTO dto) {
 
@@ -81,29 +86,40 @@ public class TravelerController {
 			}
 
 		}).orElseGet(() -> new ResponseEntity("Viajante não encontrado na base de dados", HttpStatus.BAD_REQUEST));
-		
 
 	}
-	
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@GetMapping("/search")
-	public ResponseEntity findByName(@RequestParam("name") String name) {
-		
-		List<Traveler> resultList = travelerService.findByNameContaining(name);
-		if(resultList.isEmpty()) {
-			return new ResponseEntity("Não foi encontrado resultados para os valores informados", HttpStatus.NO_CONTENT);
+	public ResponseEntity search(@RequestBody TravelerDTO dto) {
+
+		try {
+			Traveler traveler = convertTravelerDTO(dto);
+			List<Traveler> resultList = travelerService.findAll(traveler);
+			if (resultList.isEmpty()) {
+				return new ResponseEntity("Não foi encontrado resultado para os valores informados",
+						HttpStatus.NO_CONTENT);
+			}
+			return ResponseEntity.ok(resultList);
+
+		} catch (TravelerException e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
 		}
-		return ResponseEntity.ok(resultList);
-		
-		
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@GetMapping
 	public ResponseEntity findAll() {
-		List<Traveler> resultList = travelerService.findAllOrderByName();
-		if(resultList.isEmpty()) {
-			return new ResponseEntity("Não foi encontrado resultados",HttpStatus.NO_CONTENT);
+
+		try {
+			List<Traveler> resultList = travelerService.findAllOrderByName();
+			if (resultList.isEmpty()) {
+				return new ResponseEntity("Não foi encontrado resultados", HttpStatus.NO_CONTENT);
+			}
+
+			return ResponseEntity.ok(resultList);
+		} catch (TravelerException e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
 		}
-		
-		return ResponseEntity.ok(resultList);
 	}
 }

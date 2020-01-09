@@ -5,9 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.hibernate.jpa.spi.CriteriaQueryTupleTransformer;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -277,23 +275,6 @@ public class TravelerServiceTest {
 		Assertions.assertThat(exception).isInstanceOf(TravelerException.class).hasMessage("Email inválido");
 		
 		
-	}
-	
-	
-	
-	/**
-	 * @return
-	 */
-	private Traveler createTraveler() {
-		Phone phone = Phone.builder().prefix(new Integer(11)).number("988887766").build();
-		List<Phone> phones = new ArrayList<Phone>();
-		phones.add(phone);
-		Traveler traveler = Traveler.builder()
-				.name("traveler 01")
-				.email("traveler01@gmail.com")
-				.document("29683018882")
-				.phones(phones).build();
-		return traveler;
 	}
 	
 	private Traveler createTravelerByParams(String name, String email, String document, String phoneNumber) {
