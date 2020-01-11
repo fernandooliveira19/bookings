@@ -34,8 +34,8 @@ public class TravelerServiceTest {
 		Traveler result = travelerService.save(traveler01);
 
 		Assert.assertNotNull(result);
-		Assert.assertNotNull(result.getPhones());
-		Assert.assertNotNull(result.getPhones().get(0).getTraveler());
+		Assert.assertNotNull(result.getPhone());
+		Assert.assertNotNull(result.getPhone().getTraveler());
 
 	}
 
@@ -55,10 +55,8 @@ public class TravelerServiceTest {
 	public void travelerMustHaveUniqueName() {
 
 		Phone phone = Phone.builder().prefix(new Integer(11)).number("333333333").build();
-		List<Phone> phones = new ArrayList<Phone>();
-		phones.add(phone);
 		Traveler traveler = Traveler.builder().name("Traveler 03").email("traveler03@gmail.com").document("33333333333")
-				.phones(phones).build();
+				.phone(phone).build();
 
 		Traveler result = travelerService.save(traveler);
 		Traveler t = travelerService.findByName(result.getName());
@@ -74,10 +72,8 @@ public class TravelerServiceTest {
 	public void travelerMustHaveUniqueEmail() {
 
 		Phone phone = Phone.builder().prefix(new Integer(11)).number("444444444").build();
-		List<Phone> phones = new ArrayList<Phone>();
-		phones.add(phone);
 		Traveler traveler = Traveler.builder().name("Traveler 04").email("traveler04@gmail.com").document("44444444444")
-				.phones(phones).build();
+				.phone(phone).build();
 
 		Traveler result = travelerService.save(traveler);
 		Traveler t = travelerService.findByEmail(result.getEmail());
@@ -91,10 +87,8 @@ public class TravelerServiceTest {
 	public void travelerMustHaveUniqueDocument() {
 
 		Phone phone = Phone.builder().prefix(new Integer(11)).number("555555555").build();
-		List<Phone> phones = new ArrayList<Phone>();
-		phones.add(phone);
 		Traveler traveler = Traveler.builder().name("Traveler 05").email("traveler05@gmail.com").document("55555555555")
-				.phones(phones).build();
+				.phone(phone).build();
 
 		Traveler result = travelerService.save(traveler);
 		Traveler t = travelerService.findByDocument(result.getDocument());
@@ -108,10 +102,8 @@ public class TravelerServiceTest {
 	public void mustReturnIdTraveler() {
 
 		Phone phone = Phone.builder().prefix(new Integer(11)).number("666666666").build();
-		List<Phone> phones = new ArrayList<Phone>();
-		phones.add(phone);
 		Traveler traveler = Traveler.builder().name("Traveler 06").email("traveler06@gmail.com").document("66666666666")
-				.phones(phones).build();
+				.phone(phone).build();
 
 		Traveler result = travelerService.save(traveler);
 
@@ -137,12 +129,10 @@ public class TravelerServiceTest {
 	@Test
 	public void shoudReturnExceptionUniqueName() {
 		Phone phone = Phone.builder().prefix(new Integer(11)).number("77777777").build();
-		List<Phone> phones = new ArrayList<Phone>();
-		phones.add(phone);
 		Traveler traveler = Traveler.builder().name("Traveler 07").email("traveler07@gmail.com").document("777777")
-				.phones(phones).build();
+				.phone(phone).build();
 		Traveler traveler2 = Traveler.builder().name("Traveler 07").email("traveler08@gmail.com").document("88")
-				.phones(phones).build();
+				.phone(phone).build();
 
 		travelerService.save(traveler);
 		
@@ -156,13 +146,11 @@ public class TravelerServiceTest {
 	public void shoudReturnExceptionUniqueDocument() {
 		
 		Phone phone = Phone.builder().prefix(new Integer(11)).number("77777777").build();
-		List<Phone> phones = new ArrayList<Phone>();
-		phones.add(phone);
 		Traveler traveler = Traveler.builder().name("Traveler 11").email("traveler11@gmail.com").document("88888888888")
-				.phones(phones).build();
+				.phone(phone).build();
 		
 		Traveler traveler2 = Traveler.builder().name("Traveler 12").email("traveler12@gmail.com").document("88888888888")
-				.phones(phones).build();
+				.phone(phone).build();
 
 		travelerService.save(traveler);
 		
@@ -177,10 +165,8 @@ public class TravelerServiceTest {
 	public void shoudReturnExceptionInvalidEmail() {
 
 		Phone phone = Phone.builder().prefix(new Integer(11)).number("77777777").build();
-		List<Phone> phones = new ArrayList<Phone>();
-		phones.add(phone);
 		Traveler traveler = Traveler.builder().name("Traveler 07").email("traveler07@gmail").document("77777777777")
-				.phones(phones).build();
+				.phone(phone).build();
 		
 		Throwable exception = Assertions.catchThrowable(() -> travelerService.save(traveler));
 		
@@ -207,14 +193,14 @@ public class TravelerServiceTest {
 	public void shouldUpdateTravelerPhone() {
 		//cenario
 		Optional<Traveler> result = travelerService.findById(1L);
-		Phone phone = result.get().getPhones().get(0);
+		Phone phone = result.get().getPhone();
 		phone.setNumber("99999-8888");
 		
 		//acao
 		Traveler updateTraveler = travelerService.update(result.get());
 		
 		//verificacao
-		Assert.assertEquals("99999-8888", updateTraveler.getPhones().get(0).getNumber());
+		Assert.assertEquals("99999-8888", updateTraveler.getPhone().getNumber());
 		
 	}
 	
@@ -280,13 +266,11 @@ public class TravelerServiceTest {
 	private Traveler createTravelerByParams(String name, String email, String document, String phoneNumber) {
 		
 		Phone phone = Phone.builder().prefix(new Integer(11)).number(phoneNumber).build();
-		List<Phone> phones = new ArrayList<Phone>();
-		phones.add(phone);
 		Traveler traveler = Traveler.builder()
 				.name(name)
 				.email(email)
 				.document(document)
-				.phones(phones).build();
+				.phone(phone).build();
 		return traveler;
 		
 	}

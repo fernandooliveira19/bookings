@@ -24,14 +24,12 @@ public class TravelerServiceImpl implements TravelerService {
 
 	TravelerRepository repository;
 	PhoneRepository phoneRepository;
-	
-	
+
 	public TravelerServiceImpl(TravelerRepository repository, PhoneRepository phoneRepository) {
-		this.repository=repository;
+		this.repository = repository;
 		this.phoneRepository = phoneRepository;
 	}
-	
-	
+
 	@Transactional
 	public Traveler save(Traveler traveler) {
 
@@ -39,12 +37,11 @@ public class TravelerServiceImpl implements TravelerService {
 
 		Traveler savedTraveler = repository.save(traveler);
 
-		for (Phone phone : savedTraveler.getPhones()) {
+		Phone phone = savedTraveler.getPhone();
 
-			if (phone != null) {
-				phone.setTraveler(savedTraveler);
-				phoneRepository.save(phone);
-			}
+		if (phone != null) {
+			phone.setTraveler(savedTraveler);
+			phoneRepository.save(phone);
 		}
 
 		return savedTraveler;
@@ -173,17 +170,15 @@ public class TravelerServiceImpl implements TravelerService {
 	public Traveler update(Traveler traveler) {
 		validate(traveler);
 		Objects.requireNonNull(traveler.getId());
-		
-		Traveler updatedTraveler = repository.save(traveler);
-		
-		for (Phone phone : updatedTraveler.getPhones()) {
 
-			if (phone != null) {
-				phone.setTraveler(updatedTraveler);
-				phoneRepository.save(phone);
-			}
+		Traveler updatedTraveler = repository.save(traveler);
+
+		Phone phone = updatedTraveler.getPhone();
+		if (phone != null) {
+			phone.setTraveler(updatedTraveler);
+			phoneRepository.save(phone);
 		}
-		
+
 		return updatedTraveler;
 	}
 
@@ -192,10 +187,8 @@ public class TravelerServiceImpl implements TravelerService {
 	@Transactional(readOnly = true)
 	public List<Traveler> findAll(Traveler traveler) {
 		@SuppressWarnings("rawtypes")
-		Example example = Example.of(traveler, 
-				ExampleMatcher.matching()
-				.withIgnoreCase()
-				.withStringMatcher(StringMatcher.CONTAINING));
+		Example example = Example.of(traveler,
+				ExampleMatcher.matching().withIgnoreCase().withStringMatcher(StringMatcher.CONTAINING));
 		return repository.findAll(example);
 	}
 
@@ -206,9 +199,9 @@ public class TravelerServiceImpl implements TravelerService {
 	}
 
 	public void validate(Traveler traveler) {
-		
+
 		validateTravelerPhone(traveler);
-		
+
 		validTravelerEmail(traveler);
 
 		validTravelerName(traveler);
@@ -218,26 +211,22 @@ public class TravelerServiceImpl implements TravelerService {
 
 	@Override
 	public void validateTravelerPhone(Traveler traveler) {
-		
-		if(traveler.getPhones().isEmpty() || traveler.getPhones() == null) {
+
+		if (traveler.getPhone() == null) {
 			throw new TravelerException("Viajante deve possuir um telefone");
 		}
-		
-	}
 
+	}
 
 	@Override
 	public List<Traveler> findByNameContaining(String name) {
-		
+
 		return repository.findAllByNameContainingIgnoreCase(name);
 	}
-
 
 	@Override
 	public List<Traveler> findAllOrderByName() {
 		return repository.findAllByOrderByNameAsc();
 	}
-
-	
 
 }

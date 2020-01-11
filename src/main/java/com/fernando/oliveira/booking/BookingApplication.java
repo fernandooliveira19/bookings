@@ -10,6 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebMvc
 public class BookingApplication implements WebMvcConfigurer{
 
+
 	public static void main(String[] args) {
 		SpringApplication.run(BookingApplication.class, args);
 	}

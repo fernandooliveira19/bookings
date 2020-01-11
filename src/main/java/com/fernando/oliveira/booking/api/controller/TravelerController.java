@@ -37,9 +37,9 @@ public class TravelerController {
 	@PostMapping
 	public ResponseEntity save(@RequestBody TravelerDTO dto) {
 
-		List<Phone> phones = converterDTOToListPhone(dto);
+		Phone phone = converterDTOTotPhone(dto);
 
-		Traveler traveler = convertTravelerDTO(dto, phones);
+		Traveler traveler = convertTravelerDTO(dto, phone);
 
 		try {
 			Traveler travelerSaved = travelerService.save(traveler);
@@ -50,9 +50,9 @@ public class TravelerController {
 		}
 	}
 
-	private Traveler convertTravelerDTO(TravelerDTO dto, List<Phone> phones) {
+	private Traveler convertTravelerDTO(TravelerDTO dto, Phone phone) {
 		Traveler traveler = Traveler.builder().name(dto.getName()).email(dto.getEmail()).document(dto.getDocument())
-				.phones(phones).build();
+				.phone(phone).build();
 		return traveler;
 	}
 
@@ -62,13 +62,10 @@ public class TravelerController {
 		return traveler;
 	}
 
-	private List<Phone> converterDTOToListPhone(TravelerDTO dto) {
-		List<Phone> phones = new ArrayList<Phone>();
-		for (PhoneDTO phoneDTO : dto.getPhones()) {
-			Phone phone = phoneService.convertToEntity(phoneDTO);
-			phones.add(phone);
-		}
-		return phones;
+	private Phone converterDTOTotPhone(TravelerDTO dto) {
+		
+		return phoneService.convertToEntity(dto.getPhone());
+		
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -77,8 +74,8 @@ public class TravelerController {
 
 		return travelerService.findById(id).map(entity -> {
 			try {
-				List<Phone> phones = converterDTOToListPhone(dto);
-				Traveler traveler = convertTravelerDTO(dto, phones);
+				Phone phone = converterDTOTotPhone(dto);
+				Traveler traveler = convertTravelerDTO(dto, phone);
 				traveler.setId(entity.getId());
 				travelerService.update(traveler);
 				return ResponseEntity.ok(traveler);

@@ -176,13 +176,11 @@ public class TravelerRepositoryTest {
 	public void shouldVerifyIfDocumentExists() {
 		
 		Phone phone = Phone.builder().prefix(new Integer(11)).number("988887766").build();
-		List<Phone> phones = new ArrayList<Phone>();
-		phones.add(phone);
 		Traveler traveler = Traveler.builder()
 				.name("Fernando")
 				.email("traveler01@gmail.com")
 				.document("29683018882")
-				.phones(phones).build();
+				.phone(phone).build();
 		entityManager.persist(traveler);
 		
 		Optional<Traveler> result = repository.findByDocument("29683018882");
@@ -198,26 +196,22 @@ public class TravelerRepositoryTest {
 	 */
 	private Traveler createTraveler() {
 		Phone phone = Phone.builder().prefix(new Integer(11)).number("988887766").build();
-		List<Phone> phones = new ArrayList<Phone>();
-		phones.add(phone);
 		Traveler traveler = Traveler.builder()
 				.name("traveler 01")
 				.email("traveler01@gmail.com")
 				.document("29683018882")
-				.phones(phones).build();
+				.phone(phone).build();
 		return traveler;
 	}
 	
 	private Traveler createTravelerByParams(String name, String email, String document, String phoneNumber) {
 		
 		Phone phone = Phone.builder().prefix(new Integer(11)).number(phoneNumber).build();
-		List<Phone> phones = new ArrayList<Phone>();
-		phones.add(phone);
 		Traveler traveler = Traveler.builder()
 				.name(name)
 				.email(email)
 				.document(document)
-				.phones(phones).build();
+				.phone(phone).build();
 		return traveler;
 		
 	}
