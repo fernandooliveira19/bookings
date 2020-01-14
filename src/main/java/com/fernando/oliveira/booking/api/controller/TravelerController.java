@@ -64,7 +64,7 @@ public class TravelerController {
 
 	private Phone converterDTOTotPhone(TravelerDTO dto) {
 		
-		return phoneService.convertToEntity(dto.getPhone());
+		return phoneService.convertDtoToEntity(dto.getPhone());
 		
 	}
 	

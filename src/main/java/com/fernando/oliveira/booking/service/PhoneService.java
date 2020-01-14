@@ -5,7 +5,7 @@ import com.fernando.oliveira.booking.model.domain.Phone;
 
 public interface PhoneService {
 	
-	Phone convertToEntity(PhoneDTO dto);
+	Phone convertDtoToEntity(PhoneDTO dto);
 
 	PhoneDTO convertEntityToDTO(Phone phone);
 

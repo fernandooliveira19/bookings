@@ -10,7 +10,7 @@ import com.fernando.oliveira.booking.service.PhoneService;
 public class PhoneServiceImpl implements PhoneService {
 
 	@Override
-	public Phone convertToEntity(PhoneDTO dto) {
+	public Phone convertDtoToEntity(PhoneDTO dto) {
 		
 		Phone phone = Phone.builder()
 				.id(dto.getId())
