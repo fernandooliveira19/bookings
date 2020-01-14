@@ -22,4 +22,14 @@ public class PhoneServiceImpl implements PhoneService {
 		return phone;
 	}
 
+	@Override
+	public PhoneDTO convertEntityToDTO(Phone phone) {
+		PhoneDTO dto = PhoneDTO.builder()
+					.id(phone.getId())
+					.prefix(phone.getPrefix())
+					.number(phone.getNumber())
+					.build();
+		return dto;
+	}
+
 }

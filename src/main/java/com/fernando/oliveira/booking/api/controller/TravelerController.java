@@ -124,4 +124,28 @@ public class TravelerController {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@GetMapping("{id}")
+	public ResponseEntity findById(@PathVariable("id") Long id) {
+		return travelerService.findById(id)
+				.map(traveler -> new ResponseEntity(convertEntityToDTO(traveler), HttpStatus.OK))
+				.orElseGet(() -> new ResponseEntity(HttpStatus.NOT_FOUND));
+			
+		
+	}
+	
+	private TravelerDTO convertEntityToDTO(Traveler traveler) {
+	
+		PhoneDTO phoneDTO = phoneService.convertEntityToDTO(traveler.getPhone());
+		
+		TravelerDTO dto = TravelerDTO.builder()
+					.id(traveler.getId())
+					.name(traveler.getName())
+					.email(traveler.getEmail())
+					.phone(phoneDTO)
+					.build();
+		return dto;
+	}
+	
 }
