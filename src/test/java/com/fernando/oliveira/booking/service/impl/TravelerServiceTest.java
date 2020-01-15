@@ -275,9 +275,39 @@ public class TravelerServiceTest {
 		
 	}
 	
+	@Test
+	public void shouldReturnAllTravelersOrderingByName() {
+		
+		Traveler traveler01 = createTravelerByParams("tatiane", "tatiane@gmail.com", "114423", "1144-1111");
+		Traveler traveler02 = createTravelerByParams("paula", "paula@gmail.com", "222235", "2255-2222");
+		Traveler traveler03 = createTravelerByParams("joana", "joana@gmail.com", "333346", "1166-3333");
+		travelerService.save(traveler01);
+		travelerService.save(traveler02);
+		travelerService.save(traveler03);
+		Traveler filter = new Traveler();
+		filter.setName("n");
+		
+		List<Traveler> result = travelerService.findAll(filter);
+		
+		
+		Assertions.assertThat(result.isEmpty()).isFalse();
+		Assertions.assertThat(result.get(0).getName()).isEqualTo("joana");
+		Assertions.assertThat(result.get(1).getName()).isEqualTo("tatiane");
+		
+	}
 	
 	
-	
-	
+	@Test
+	public void shoudReturnExceptionWhenPhoneIsNull() {
+		
+		Traveler traveler = Traveler.builder().name("without phone").email("withoutphone@gmail.com").document("8888884")
+				.build();
+		
+		Throwable exception = Assertions.catchThrowable(() -> travelerService.save(traveler));
+		
+		Assertions.assertThat(exception).isInstanceOf(TravelerException.class).hasMessage("Viajante deve possuir um telefone");
+
+
+	}
 	
 }

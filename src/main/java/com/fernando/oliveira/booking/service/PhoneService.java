@@ -7,4 +7,6 @@ public interface PhoneService {
 	
 	Phone convertToEntity(PhoneDTO dto);
 
+	PhoneDTO convertEntityToDTO(Phone phone);
+
 }

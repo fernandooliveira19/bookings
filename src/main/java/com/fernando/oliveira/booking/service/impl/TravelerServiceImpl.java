@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.ExampleMatcher.StringMatcher;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -189,7 +190,8 @@ public class TravelerServiceImpl implements TravelerService {
 		@SuppressWarnings("rawtypes")
 		Example example = Example.of(traveler,
 				ExampleMatcher.matching().withIgnoreCase().withStringMatcher(StringMatcher.CONTAINING));
-		return repository.findAll(example);
+		
+		return repository.findAll(example, new Sort(Sort.Direction.ASC, "name"));
 	}
 
 	@Override
