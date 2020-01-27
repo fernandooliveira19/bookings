@@ -128,7 +128,7 @@ public class TravelerController {
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@GetMapping("{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity findById(@PathVariable("id") Long id) {
 		return travelerService.findById(id)
 				.map(traveler -> new ResponseEntity(convertEntityToDTO(traveler), HttpStatus.OK))

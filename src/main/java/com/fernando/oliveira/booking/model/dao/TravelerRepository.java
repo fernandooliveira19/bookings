@@ -25,5 +25,7 @@ public interface TravelerRepository extends JpaRepository<Traveler,Long>{
 	
 	public List<Traveler> findAllByNameContainingIgnoreCase(String name);
 	
+	public Optional<Traveler> findById(Long id);
+	
 	
 }
