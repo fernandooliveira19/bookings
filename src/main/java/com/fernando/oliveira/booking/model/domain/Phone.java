@@ -11,13 +11,19 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="PHONE", schema="BKN")
+@Table(name="PHONE", schema="bkn")
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Phone implements Serializable{
 	
 	/**
@@ -40,7 +46,8 @@ public class Phone implements Serializable{
 	 * Relationships
 	 */
 	@OneToOne
-	@JoinColumn(name="TRAVELER_ID")
+	@JoinColumn(name="TRAVELER_ID", insertable = true, updatable = true)
+	@JsonIgnore
 	private Traveler traveler;
 
 }

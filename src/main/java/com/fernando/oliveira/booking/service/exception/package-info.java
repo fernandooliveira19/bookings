@@ -1,0 +1,1 @@
+package com.fernando.oliveira.booking.service.exception;

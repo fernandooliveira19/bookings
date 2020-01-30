@@ -22,13 +22,17 @@ import org.springframework.format.annotation.NumberFormat.Style;
 import com.fernando.oliveira.booking.model.domain.enums.PaymentStatus;
 import com.fernando.oliveira.booking.model.domain.enums.PaymentType;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="LAUNCH" , schema="BKN")
+@Table(name="LAUNCH", schema="bkn")
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Launch implements Serializable {
 
 	/**
