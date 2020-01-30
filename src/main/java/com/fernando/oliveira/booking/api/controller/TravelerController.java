@@ -89,7 +89,9 @@ public class TravelerController {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@GetMapping("/search")
-	public ResponseEntity search(@RequestParam("name") String name, @RequestParam("email") String email ) {
+	public ResponseEntity search(
+			@RequestParam(value="name", required=false) String name, 
+			@RequestParam(value="email", required=false) String email ) {
 
 		try {
 			TravelerDTO dto = new TravelerDTO();
@@ -126,7 +128,7 @@ public class TravelerController {
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@GetMapping("{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity findById(@PathVariable("id") Long id) {
 		return travelerService.findById(id)
 				.map(traveler -> new ResponseEntity(convertEntityToDTO(traveler), HttpStatus.OK))
