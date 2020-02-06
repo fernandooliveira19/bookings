@@ -310,4 +310,13 @@ public class TravelerServiceTest {
 
 	}
 	
+	@Test
+	public void shouldReturnExceptionWhenTravelerNotFoundById() {
+		
+		Throwable exception = Assertions.catchThrowable(() -> travelerService.findById(999L));
+		
+		Assertions.assertThat(exception).isInstanceOf(TravelerException.class).hasMessage("Viajante não encontrado pelo id");
+		
+	}
+	
 }

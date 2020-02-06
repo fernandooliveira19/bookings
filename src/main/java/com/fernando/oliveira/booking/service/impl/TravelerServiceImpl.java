@@ -197,7 +197,15 @@ public class TravelerServiceImpl implements TravelerService {
 	@Override
 	@Transactional(readOnly = true)
 	public Optional<Traveler> findById(Long id) {
-		return repository.findById(id);
+		
+		Optional<Traveler> result = repository.findById(id);
+		
+		if(result.isPresent()) {
+			return result;
+		}else {
+			throw new TravelerException("Viajante não encontrado pelo id");
+		}
+		
 	}
 
 	public void validate(Traveler traveler) {
