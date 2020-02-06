@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
@@ -69,8 +70,8 @@ public class Booking implements Serializable {
 	private BookingStatus bookingStatus;
 	
 	@NumberFormat(style=Style.CURRENCY, pattern="#,##0.00")
-	@Column(name = "PENDING_AMOUNT", nullable = false, columnDefinition="DECIMAL(7,2) DEFAULT 0.00")
-	private BigDecimal pendingAmount;
+	@Column(name = "AMOUNT_PAID", nullable = false, columnDefinition="DECIMAL(7,2) DEFAULT 0.00")
+	private BigDecimal amountPaid;
 	
 	@Column(name="GUESTS")
 	private Integer guests;
@@ -78,6 +79,9 @@ public class Booking implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="TRAVELER_ID")
 	private Traveler traveler;
+	
+	@Transient
+	private BigDecimal pending;
 	
 
 }

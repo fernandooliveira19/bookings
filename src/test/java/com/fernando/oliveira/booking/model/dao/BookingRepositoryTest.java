@@ -47,7 +47,7 @@ public class BookingRepositoryTest {
 				.checkOut(LocalDateTime.parse("27/07/2018 18:00",
 						DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
 				.amount(new BigDecimal("1000.00"))
-				.pendingAmount(new BigDecimal("400.00"))
+				.amountPaid(new BigDecimal("400.00"))
 				.bookingStatus(BookingStatus.RESERVADO)
 				.paymentStatus(PaymentStatus.PENDENTE)
 				.guests(new Integer(6))

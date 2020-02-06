@@ -35,8 +35,8 @@ public class BookingServiceTest {
 	public void shouldSaveBooking() {
 
 		Booking booking = createBookingWithParams(
-				LocalDateTime.parse("22/07/2018 10:30",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
-				LocalDateTime.parse("22/07/2018 10:30",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				LocalDateTime.parse("01/01/2018 10:00",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				LocalDateTime.parse("10/01/2018 18:00",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
 				new BigDecimal("1000.00"),
 				new BigDecimal("600.00"),
 				BookingStatus.RESERVADO,
@@ -53,15 +53,15 @@ public class BookingServiceTest {
 	public void shouldReturnExceptionMessageWhenBookingAndNotFindTravelerById() {
 
 		Booking booking = createBookingWithParams(
-				LocalDateTime.parse("22/07/2018 10:30",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
-				LocalDateTime.parse("22/07/2018 10:30",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				LocalDateTime.parse("11/01/2018 10:30",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				LocalDateTime.parse("20/01/2018 18:30",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
 				new BigDecimal("1000.00"),
 				new BigDecimal("600.00"),
 				BookingStatus.RESERVADO,
 				PaymentStatus.PENDENTE);
 		
 		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(booking,999L));
-		
+		Assertions.assertThat(booking.getId()).isNull();
 		Assertions.assertThat(exception).isInstanceOf(TravelerException.class).hasMessage("Viajante não encontrado pelo id");
 		
 		
@@ -69,8 +69,7 @@ public class BookingServiceTest {
 	}
 	
 	@Test
-	public void shouldReturnExceptionMessageWhenBookingDoNotTraveler() {
-//		
+	public void shouldReturnExceptionMessageWhenBookingDoNotTraveler() {		
 		Booking booking = createBookingWithParams(
 				LocalDateTime.parse("22/07/2018 10:30",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
 				LocalDateTime.parse("22/07/2018 10:30",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
@@ -81,39 +80,158 @@ public class BookingServiceTest {
 		
 		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(booking,null));
 		
+		Assertions.assertThat(booking.getId()).isNull();
+		
 		Assertions.assertThat(exception).isInstanceOf(BookingException.class).hasMessage("Viajante é obrigatório");
 		
 		
 		
 	}
 	
-	public void shouldNotSaveBookingWithoutPendingAmount() {
-		
-		
-		
-	}
-	
+	@Test
 	public void shouldNotSaveBookingWithoutAmount() {
+		Booking booking = createBookingWithParams(
+				LocalDateTime.parse("22/07/2018 10:30",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				LocalDateTime.parse("22/07/2018 10:30",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				null,
+				null,
+				BookingStatus.RESERVADO,
+				PaymentStatus.PENDENTE);
 		
-	} 
-	
-	public void shouldNotSaveBookingWithoutDates() {
+		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(booking,1L));
+		
+		Assertions.assertThat(booking.getId()).isNull();
+		
+		Assertions.assertThat(exception).isInstanceOf(BookingException.class).hasMessage("Valor da reserva é obrigatório");
+		
 		
 	}
 	
+	@Test
+	public void shouldNotSaveBookingWithoutAmountLessThanZero() {
+		Booking booking = createBookingWithParams(
+				LocalDateTime.parse("22/07/2018 10:30",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				LocalDateTime.parse("22/07/2018 10:30",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				new BigDecimal("-1.00"),
+				null,
+				BookingStatus.RESERVADO,
+				PaymentStatus.PENDENTE);
+		
+		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(booking,1L));
+		
+		Assertions.assertThat(booking.getId()).isNull();
+		
+		Assertions.assertThat(exception).isInstanceOf(BookingException.class).hasMessage("Valor da reserva deve ser maior que zero");
+		
+		
+	}
+	
+	
+	@Test
+	public void shouldNotSaveBookingWithoutCheckIn() {
+		Booking booking = createBookingWithParams(
+				null,
+				LocalDateTime.parse("22/07/2018 10:30",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				new BigDecimal("1000.00"),
+				new BigDecimal("400.00"),
+				BookingStatus.RESERVADO,
+				PaymentStatus.PENDENTE);
+		
+		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(booking,1L));
+		
+		Assertions.assertThat(booking.getId()).isNull();
+		
+		Assertions.assertThat(exception).isInstanceOf(BookingException.class).hasMessage("Data de check-in é obrigatório");
+	}
+	
+	@Test
+	public void shouldNotSaveBookingWithoutCheckOut() {
+		Booking booking = createBookingWithParams(
+				LocalDateTime.parse("22/07/2018 10:30",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				null,
+				new BigDecimal("1000.00"),
+				new BigDecimal("400.00"),
+				BookingStatus.RESERVADO,
+				PaymentStatus.PENDENTE);
+		
+		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(booking,1L));
+		
+		Assertions.assertThat(booking.getId()).isNull();
+		
+		Assertions.assertThat(exception).isInstanceOf(BookingException.class).hasMessage("Data de check-out é obrigatório");
+	}
+	
+	@Test
+	public void shouldNotSaveBookingWithtCheckOutLessThanCheckIn() {
+		Booking booking = createBookingWithParams(
+				LocalDateTime.parse("22/07/2018 10:30",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				LocalDateTime.parse("21/07/2018 10:30",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				new BigDecimal("1000.00"),
+				new BigDecimal("400.00"),
+				BookingStatus.RESERVADO,
+				PaymentStatus.PENDENTE);
+		
+		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(booking,1L));
+		
+		Assertions.assertThat(booking.getId()).isNull();
+		
+		Assertions.assertThat(exception).isInstanceOf(BookingException.class).hasMessage("Data de check-in deve ser menor que data de check-out");
+	}
+	
+	@Test
+	public void shouldNotSaveBookingWithtCheckOutEqualsThanCheckIn() {
+		Booking booking = createBookingWithParams(
+				LocalDateTime.parse("22/07/2018 10:30",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				LocalDateTime.parse("22/07/2018 10:30",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				new BigDecimal("1000.00"),
+				new BigDecimal("400.00"),
+				BookingStatus.RESERVADO,
+				PaymentStatus.PENDENTE);
+		
+		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(booking,1L));
+		
+		Assertions.assertThat(booking.getId()).isNull();
+		
+		Assertions.assertThat(exception).isInstanceOf(BookingException.class).hasMessage("Data de check-in deve ser menor que data de check-out");
+	}
+	@Test
 	public void shouldNotSaveBookingWithoutStatus() {
+		Booking booking = createBookingWithParams(
+				LocalDateTime.parse("22/07/2018 10:30",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				LocalDateTime.parse("28/07/2018 10:30",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				new BigDecimal("1000.00"),
+				new BigDecimal("400.00"),
+				null,
+				PaymentStatus.PENDENTE);
 		
+		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(booking,1L));
+		
+		Assertions.assertThat(booking.getId()).isNull();
+		
+		Assertions.assertThat(exception).isInstanceOf(BookingException.class).hasMessage("Situação da reserva é obrigatório");
 	}
-	
+	@Test
 	public void shouldNotSaveBookingWithoutPaymentStatus() {
+		Booking booking = createBookingWithParams(
+				LocalDateTime.parse("22/07/2018 10:30",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				LocalDateTime.parse("28/07/2018 10:30",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				new BigDecimal("1000.00"),
+				new BigDecimal("400.00"),
+				BookingStatus.RESERVADO,
+				null);
 		
+		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(booking,1L));
+		
+		Assertions.assertThat(booking.getId()).isNull();
+		
+		Assertions.assertThat(exception).isInstanceOf(BookingException.class).hasMessage("Situação do pagamento é obrigatório");
 	}
 
 	private Booking createBookingWithParams(
 				LocalDateTime checkIn,
 				LocalDateTime checkOut,
 				BigDecimal amount,
-				BigDecimal pendingAmount,
+				BigDecimal amountPaid,
 				BookingStatus bookingStatus,
 				PaymentStatus paymentStatus) {
 		
@@ -122,7 +240,7 @@ public class BookingServiceTest {
 				.checkIn(checkIn)
 				.checkOut(checkOut)
 				.amount(amount)
-				.pendingAmount(pendingAmount)
+				.amountPaid(amountPaid)
 				.bookingStatus(bookingStatus)
 				.paymentStatus(paymentStatus)
 				.build();
@@ -131,18 +249,5 @@ public class BookingServiceTest {
 				
 	}
 	
-	/**
-	 * @return
-	 */
-	private Traveler createTraveler() {
-		Phone phone = Phone.builder().prefix(new Integer(11)).number("988887766").build();
-		Traveler traveler = Traveler.builder()
-				.name("traveler 01")
-				.email("traveler01@gmail.com")
-				.document("29683018882")
-				.phone(phone).build();
-		return traveler;
-	}
-	
-	
+		
 }
