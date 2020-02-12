@@ -21,8 +21,10 @@ public class TravelerDTO {
 	
 	private PhoneDTO phone;
 	
-//	private Address adress;
-//	
-//	private List<Booking> bookings;
+
+	public TravelerDTO(Long id, String name) {
+		this.id = id;
+		this.name = name;
+	}
 
 }

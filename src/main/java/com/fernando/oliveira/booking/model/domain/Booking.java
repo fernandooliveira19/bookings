@@ -20,6 +20,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
 import org.springframework.format.annotation.NumberFormat.Style;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fernando.oliveira.booking.model.domain.enums.BookingStatus;
 import com.fernando.oliveira.booking.model.domain.enums.PaymentStatus;
 
@@ -78,6 +79,7 @@ public class Booking implements Serializable {
 	
 	@ManyToOne
 	@JoinColumn(name="TRAVELER_ID")
+	@JsonIgnore
 	private Traveler traveler;
 	
 	@Transient

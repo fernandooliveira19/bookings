@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fernando.oliveira.booking.model.domain.enums.BookingStatus;
 import com.fernando.oliveira.booking.model.domain.enums.PaymentStatus;
 
@@ -22,8 +24,12 @@ public class BookingDTO {
 	
 	private Long id;
 	
+	@DateTimeFormat(iso=DateTimeFormat.ISO.DATE_TIME)
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	private LocalDateTime checkIn;
 	
+	@DateTimeFormat(iso=DateTimeFormat.ISO.DATE_TIME)
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	private LocalDateTime checkOut;
 	
 	private BigDecimal amount;
@@ -38,7 +44,8 @@ public class BookingDTO {
 	
 	private Integer guests;
 	
-	private Long travelerId;
+	private TravelerDTO travelerDTO;
+	
 	
 	
 }

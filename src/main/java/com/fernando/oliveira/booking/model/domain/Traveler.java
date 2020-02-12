@@ -49,7 +49,7 @@ public class Traveler implements Serializable{
 	@OneToOne(mappedBy="traveler", cascade=CascadeType.ALL)
 	private Address address;
 	
-	@OneToMany(mappedBy="traveler")
+	@OneToMany(mappedBy="traveler", fetch=FetchType.LAZY)
 	private List<Booking> bookings;
 	
 		

@@ -1,15 +1,23 @@
 package com.fernando.oliveira.booking.service.impl;
 
 import java.math.BigDecimal;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
+import com.fernando.oliveira.booking.api.dto.BookingDTO;
+import com.fernando.oliveira.booking.api.dto.BookingFilterDTO;
+import com.fernando.oliveira.booking.api.dto.TravelerDTO;
 import com.fernando.oliveira.booking.model.dao.BookingRepository;
+import com.fernando.oliveira.booking.model.dao.BookingRepositoryCustom;
 import com.fernando.oliveira.booking.model.domain.Booking;
 import com.fernando.oliveira.booking.model.domain.Traveler;
+import com.fernando.oliveira.booking.model.domain.enums.BookingStatus;
+import com.fernando.oliveira.booking.model.domain.enums.PaymentStatus;
 import com.fernando.oliveira.booking.service.BookingService;
 import com.fernando.oliveira.booking.service.TravelerService;
 import com.fernando.oliveira.booking.service.exception.BookingException;
@@ -20,6 +28,9 @@ public class BookingServiceImpl implements BookingService {
 
 	@Autowired
 	public BookingRepository repository;
+	
+	@Autowired
+	public BookingRepositoryCustom repositoryCustom;
 
 	@Autowired
 	public TravelerService travelerService;
@@ -114,6 +125,58 @@ public class BookingServiceImpl implements BookingService {
 			booking.setTraveler(traveler.get());
 		}
 		
+	}
+
+	@Override
+	public List<BookingDTO> search(BookingFilterDTO filter) {
+		
+		String travelerName = filter.getTravelerName();
+		PaymentStatus paymentStatus = PaymentStatus.toEnum(filter.getPaymentStatus());
+		BookingStatus bookingStatus = BookingStatus.toEnum(filter.getBookingStatus());
+		String date = filter.getDate();
+		
+		List<Booking> result = repositoryCustom.search(travelerName, paymentStatus, bookingStatus, date);
+		List<BookingDTO> dtos = new ArrayList<BookingDTO>();
+		for(Booking booking : result) {
+			
+			dtos.add(convertEntityToDTO(booking));
+			
+		}
+		
+		return dtos;
+	}
+
+	public BookingDTO convertEntityToDTO(Booking booking) {
+		BookingDTO dto = BookingDTO.builder()
+				.amount(booking.getAmount())
+				.amountPaid(booking.getAmountPaid())
+				.id(booking.getId())
+				.checkIn(booking.getCheckIn())
+				.checkOut(booking.getCheckOut())
+				.observation(booking.getObservation())
+				.paymentStatus(booking.getPaymentStatus())
+				.bookingStatus(booking.getBookingStatus())
+				.guests(booking.getGuests())
+				.travelerDTO(new TravelerDTO(booking.getTraveler().getId(), booking.getTraveler().getName()))
+				.build();
+		return dto;
+	}
+	
+	public Booking convertDtoToEntity(BookingDTO dto) {
+		
+		Booking booking = Booking.builder()
+							.amount(dto.getAmount())
+							.amountPaid(dto.getAmountPaid())
+							.bookingStatus(dto.getBookingStatus())
+							.checkIn(dto.getCheckIn())
+							.checkOut(dto.getCheckOut())
+							.guests(dto.getGuests())
+							.id(dto.getId())
+							.observation(dto.getObservation())
+							.paymentStatus(dto.getPaymentStatus())
+							.build();
+							
+		return booking;
 	}
 	
 

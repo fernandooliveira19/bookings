@@ -101,7 +101,7 @@ public class TravelerController {
 			Traveler traveler = convertTravelerDTO(dto);
 			List<Traveler> resultList = travelerService.findAll(traveler);
 			if (resultList.isEmpty()) {
-				return new ResponseEntity("Não foi encontrado resultado para os valores informados",
+				return new ResponseEntity("Não foram encontrados resultados para os valores informados",
 						HttpStatus.NO_CONTENT);
 			}
 			return ResponseEntity.ok(resultList);
