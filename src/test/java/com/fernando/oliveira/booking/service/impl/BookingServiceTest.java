@@ -13,8 +13,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fernando.oliveira.booking.model.domain.Booking;
-import com.fernando.oliveira.booking.model.domain.Phone;
-import com.fernando.oliveira.booking.model.domain.Traveler;
 import com.fernando.oliveira.booking.model.domain.enums.BookingStatus;
 import com.fernando.oliveira.booking.model.domain.enums.PaymentStatus;
 import com.fernando.oliveira.booking.service.BookingService;
@@ -225,6 +223,21 @@ public class BookingServiceTest {
 		Assertions.assertThat(booking.getId()).isNull();
 		
 		Assertions.assertThat(exception).isInstanceOf(BookingException.class).hasMessage("Situação do pagamento é obrigatório");
+	}
+	
+	@Test
+	public void shouldNotSaveBookingWithDatesBetweenInsideOtherBookingDate() {
+		
+	}
+	
+	@Test
+	public void shouldNotSaveBookingWithCheckInDateInsideOtherBooking() {
+		
+	}
+	
+	@Test
+	public void shouldNotSaveBookingWithCheckOutDateInsideOtherBooking() {
+		
 	}
 
 	private Booking createBookingWithParams(
