@@ -44,7 +44,7 @@ public class BookingDTO {
 	
 	private Integer guests;
 	
-	private TravelerDTO travelerDTO;
+	private Long travelerId;
 	
 	
 	

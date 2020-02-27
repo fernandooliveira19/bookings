@@ -48,11 +48,11 @@ public class Booking implements Serializable {
 	private Long id;
 	
 	@Column(name="CHECK_IN", nullable=false)
-	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
 	private LocalDateTime checkIn;
 	
 	@Column(name="CHECK_OUT", nullable=false)
-	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
 	private LocalDateTime checkOut;
 	
 	@NumberFormat(style=Style.CURRENCY, pattern="#,##0.00")

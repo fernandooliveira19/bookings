@@ -13,6 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fernando.oliveira.booking.model.domain.Booking;
+import com.fernando.oliveira.booking.model.domain.Traveler;
 import com.fernando.oliveira.booking.model.domain.enums.BookingStatus;
 import com.fernando.oliveira.booking.model.domain.enums.PaymentStatus;
 import com.fernando.oliveira.booking.service.BookingService;
@@ -38,9 +39,10 @@ public class BookingServiceTest {
 				new BigDecimal("1000.00"),
 				new BigDecimal("600.00"),
 				BookingStatus.RESERVADO,
-				PaymentStatus.PENDENTE);
+				PaymentStatus.PENDENTE,
+				new Long(1));
 		
-		bookingService.save(booking,1L);
+		bookingService.save(booking);
 		
 		
 		Assertions.assertThat(booking.getId()).isNotNull();
@@ -56,9 +58,10 @@ public class BookingServiceTest {
 				new BigDecimal("1000.00"),
 				new BigDecimal("600.00"),
 				BookingStatus.RESERVADO,
-				PaymentStatus.PENDENTE);
+				PaymentStatus.PENDENTE,
+				new Long(999));
 		
-		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(booking,999L));
+		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(booking));
 		Assertions.assertThat(booking.getId()).isNull();
 		Assertions.assertThat(exception).isInstanceOf(TravelerException.class).hasMessage("Viajante não encontrado pelo id");
 		
@@ -74,9 +77,10 @@ public class BookingServiceTest {
 				new BigDecimal("1000.00"),
 				new BigDecimal("600.00"),
 				BookingStatus.RESERVADO,
-				PaymentStatus.PENDENTE);
+				PaymentStatus.PENDENTE,
+				null);
 		
-		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(booking,null));
+		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(booking));
 		
 		Assertions.assertThat(booking.getId()).isNull();
 		
@@ -94,9 +98,10 @@ public class BookingServiceTest {
 				null,
 				null,
 				BookingStatus.RESERVADO,
-				PaymentStatus.PENDENTE);
+				PaymentStatus.PENDENTE,
+				new Long(1));
 		
-		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(booking,1L));
+		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(booking));
 		
 		Assertions.assertThat(booking.getId()).isNull();
 		
@@ -113,9 +118,10 @@ public class BookingServiceTest {
 				new BigDecimal("-1.00"),
 				null,
 				BookingStatus.RESERVADO,
-				PaymentStatus.PENDENTE);
+				PaymentStatus.PENDENTE,
+				new Long(1));
 		
-		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(booking,1L));
+		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(booking));
 		
 		Assertions.assertThat(booking.getId()).isNull();
 		
@@ -133,9 +139,10 @@ public class BookingServiceTest {
 				new BigDecimal("1000.00"),
 				new BigDecimal("400.00"),
 				BookingStatus.RESERVADO,
-				PaymentStatus.PENDENTE);
+				PaymentStatus.PENDENTE,
+				new Long(1));
 		
-		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(booking,1L));
+		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(booking));
 		
 		Assertions.assertThat(booking.getId()).isNull();
 		
@@ -150,9 +157,10 @@ public class BookingServiceTest {
 				new BigDecimal("1000.00"),
 				new BigDecimal("400.00"),
 				BookingStatus.RESERVADO,
-				PaymentStatus.PENDENTE);
+				PaymentStatus.PENDENTE,
+				new Long(1));
 		
-		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(booking,1L));
+		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(booking));
 		
 		Assertions.assertThat(booking.getId()).isNull();
 		
@@ -167,9 +175,10 @@ public class BookingServiceTest {
 				new BigDecimal("1000.00"),
 				new BigDecimal("400.00"),
 				BookingStatus.RESERVADO,
-				PaymentStatus.PENDENTE);
+				PaymentStatus.PENDENTE,
+				new Long(1));
 		
-		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(booking,1L));
+		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(booking));
 		
 		Assertions.assertThat(booking.getId()).isNull();
 		
@@ -184,9 +193,10 @@ public class BookingServiceTest {
 				new BigDecimal("1000.00"),
 				new BigDecimal("400.00"),
 				BookingStatus.RESERVADO,
-				PaymentStatus.PENDENTE);
+				PaymentStatus.PENDENTE,
+				new Long(1));
 		
-		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(booking,1L));
+		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(booking));
 		
 		Assertions.assertThat(booking.getId()).isNull();
 		
@@ -200,9 +210,10 @@ public class BookingServiceTest {
 				new BigDecimal("1000.00"),
 				new BigDecimal("400.00"),
 				null,
-				PaymentStatus.PENDENTE);
+				PaymentStatus.PENDENTE,
+				new Long(1));
 		
-		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(booking,1L));
+		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(booking));
 		
 		Assertions.assertThat(booking.getId()).isNull();
 		
@@ -216,9 +227,10 @@ public class BookingServiceTest {
 				new BigDecimal("1000.00"),
 				new BigDecimal("400.00"),
 				BookingStatus.RESERVADO,
-				null);
+				null,
+				new Long(1));
 		
-		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(booking,1L));
+		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(booking));
 		
 		Assertions.assertThat(booking.getId()).isNull();
 		
@@ -226,17 +238,113 @@ public class BookingServiceTest {
 	}
 	
 	@Test
-	public void shouldNotSaveBookingWithDatesBetweenInsideOtherBookingDate() {
+	public void shouldNotSaveBookingWithCheckInDatesBetweenLimitsFromOthersBookingDate() {
+		Booking booking = createBookingWithParams(
+				LocalDateTime.parse("01/01/2020 10:00",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				LocalDateTime.parse("05/01/2020 18:00",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				new BigDecimal("1000.00"),
+				new BigDecimal("400.00"),
+				BookingStatus.RESERVADO,
+				PaymentStatus.PAGO, new Long(1));
+		
+		Booking insideBooking = createBookingWithParams(
+				LocalDateTime.parse("01/01/2020 11:00",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				LocalDateTime.parse("06/01/2020 18:00",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				new BigDecimal("1000.00"),
+				new BigDecimal("400.00"),
+				BookingStatus.RESERVADO,
+				PaymentStatus.PENDENTE,
+				new Long(1));
+		
+		bookingService.save(booking);
+		
+		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(insideBooking));
+		
+		Assertions.assertThat(exception).isInstanceOf(BookingException.class).hasMessage("Já existe outra reserva para o período solicitado");
 		
 	}
 	
 	@Test
-	public void shouldNotSaveBookingWithCheckInDateInsideOtherBooking() {
+	public void shouldNotSaveBookingWithCheckOutDatesBetweenLimitsFromOthersBookingDate() {
+		Booking booking = createBookingWithParams(
+				LocalDateTime.parse("07/01/2020 10:00",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				LocalDateTime.parse("10/01/2020 18:00",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				new BigDecimal("1000.00"),
+				new BigDecimal("400.00"),
+				BookingStatus.RESERVADO,
+				PaymentStatus.PAGO,
+				new Long(1));
 		
+		Booking insideBooking = createBookingWithParams(
+				LocalDateTime.parse("06/01/2020 10:00",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				LocalDateTime.parse("07/01/2020 18:00",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				new BigDecimal("1000.00"),
+				new BigDecimal("400.00"),
+				BookingStatus.RESERVADO,
+				PaymentStatus.PENDENTE,
+				new Long(1));
+		
+		bookingService.save(booking);
+		
+		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(insideBooking));
+		
+		Assertions.assertThat(exception).isInstanceOf(BookingException.class).hasMessage("Já existe outra reserva para o período solicitado");
+		
+	}
+	
+	@Test
+	public void shouldNotSaveBookingWithOtherBookingInside() {
+		Booking booking = createBookingWithParams(
+				LocalDateTime.parse("15/01/2020 10:00",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				LocalDateTime.parse("20/01/2020 18:00",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				new BigDecimal("1000.00"),
+				new BigDecimal("400.00"),
+				BookingStatus.RESERVADO,
+				PaymentStatus.PAGO,
+				new Long(1));
+		
+		Booking insideBooking = createBookingWithParams(
+				LocalDateTime.parse("14/01/2020 10:00",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				LocalDateTime.parse("21/01/2020 18:00",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				new BigDecimal("1000.00"),
+				new BigDecimal("400.00"),
+				BookingStatus.RESERVADO,
+				PaymentStatus.PENDENTE,
+				new Long(1));
+		
+		bookingService.save(booking);
+		
+		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(insideBooking));
+		
+		Assertions.assertThat(exception).isInstanceOf(BookingException.class).hasMessage("Já existe outra reserva para o período solicitado");
 	}
 	
 	@Test
 	public void shouldNotSaveBookingWithCheckOutDateInsideOtherBooking() {
+		
+		Booking booking = createBookingWithParams(
+				LocalDateTime.parse("21/01/2020 10:00",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				LocalDateTime.parse("25/01/2020 18:00",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				new BigDecimal("1000.00"),
+				new BigDecimal("400.00"),
+				BookingStatus.RESERVADO,
+				PaymentStatus.PAGO,
+				new Long(1));
+		
+		Booking insideBooking = createBookingWithParams(
+				LocalDateTime.parse("22/01/2020 10:00",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				LocalDateTime.parse("24/01/2020 18:00",	DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+				new BigDecimal("1000.00"),
+				new BigDecimal("400.00"),
+				BookingStatus.RESERVADO,
+				PaymentStatus.PENDENTE,
+				new Long(1));
+		
+		bookingService.save(booking);
+		
+		Throwable exception = Assertions.catchThrowable(() -> bookingService.save(insideBooking));
+		
+		Assertions.assertThat(exception).isInstanceOf(BookingException.class).hasMessage("Já existe outra reserva para o período solicitado");
 		
 	}
 
@@ -246,7 +354,14 @@ public class BookingServiceTest {
 				BigDecimal amount,
 				BigDecimal amountPaid,
 				BookingStatus bookingStatus,
-				PaymentStatus paymentStatus) {
+				PaymentStatus paymentStatus,
+				Long travelerId) {
+		
+		Traveler traveler = null;
+		if(travelerId != null) {
+		
+			traveler = new Traveler(travelerId);
+		}
 		
 		
 		Booking booking = Booking.builder()
@@ -256,6 +371,7 @@ public class BookingServiceTest {
 				.amountPaid(amountPaid)
 				.bookingStatus(bookingStatus)
 				.paymentStatus(paymentStatus)
+				.traveler(traveler)
 				.build();
 		
 		return booking;

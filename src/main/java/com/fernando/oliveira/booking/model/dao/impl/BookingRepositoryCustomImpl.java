@@ -1,5 +1,7 @@
 package com.fernando.oliveira.booking.model.dao.impl;
 
+import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -41,12 +43,47 @@ public class BookingRepositoryCustomImpl implements BookingRepositoryCustom{
 		if(date != null) {
 			query.append("and to_date('"+ date + "', 'YYYY-MM-DD') between DATE_TRUNC('day',b.check_in) and DATE_TRUNC('day',b.check_out)");
 		}
+		query.append(" order by b.check_in asc");
 		
 		Query q = entityManager.createNativeQuery(query.toString(), Booking.class);
 		
 		return q.getResultList();
-
-		
 		
 	}
+
+	@Override
+	public List<Booking> verifyInitAndFinalLimits(LocalDateTime checkIn, LocalDateTime checkOut) {
+		
+		StringBuilder query = new StringBuilder();
+		query.append("select * from bkn.booking b ");
+		
+		query.append(" where (to_timestamp('"+ checkIn+"', 'YYYY-MM-DD HH24:mi') " + 
+				" between check_in and check_out) " ); 
+		query.append("or " + 
+				"(to_timestamp('"+checkOut+"', 'YYYY-MM-DD HH24:mi')" + 
+				" between check_in and check_out)");
+		
+		query.append(" order by b.check_in asc");
+		
+		Query q = entityManager.createNativeQuery(query.toString(), Booking.class);
+		
+		return q.getResultList();
+	}
+
+	@Override
+	public List<Booking> verifyOutsideConsflicts(LocalDateTime checkIn, LocalDateTime checkOut) {
+		StringBuilder query = new StringBuilder();
+		query.append("select * from bkn.booking b ");
+		
+		query.append("where (check_in between to_timestamp('"+checkIn+"', 'YYYY-MM-DD HH24:mi') and to_timestamp('"+checkOut+"', 'YYYY-MM-DD HH24:mi'))");
+		
+		query.append("or 	(check_out between to_timestamp('"+checkIn+"', 'YYYY-MM-DD HH24:mi') and to_timestamp('"+checkOut+"', 'YYYY-MM-DD HH24:mi'))");
+		query.append(" order by b.check_in asc");
+		
+		Query q = entityManager.createNativeQuery(query.toString(), Booking.class);
+		
+		return q.getResultList();
+	}
+	
+	
 }

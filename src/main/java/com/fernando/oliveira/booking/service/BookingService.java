@@ -12,7 +12,7 @@ public interface BookingService {
 
 	public Optional<Traveler> findTravelerById(Long id);
 
-	Booking save(Booking booking, Long travelerId);
+	Booking save(Booking booking);
 
 	public List<BookingDTO> search(BookingFilterDTO filter);
 

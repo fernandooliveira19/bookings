@@ -52,6 +52,10 @@ public class Traveler implements Serializable{
 	@OneToMany(mappedBy="traveler", fetch=FetchType.LAZY)
 	private List<Booking> bookings;
 	
+	public Traveler(Long id) {
+		this.id = id;
+	}
+	
 		
 
 }

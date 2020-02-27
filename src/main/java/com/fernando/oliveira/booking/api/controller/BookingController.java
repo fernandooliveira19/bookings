@@ -31,7 +31,7 @@ public class BookingController {
 		Booking booking = bookingService.convertDtoToEntity(dto);
 		
 		try {
-			Booking bookingSaved = bookingService.save(booking, dto.getTravelerDTO().getId());
+			Booking bookingSaved = bookingService.save(booking);
 			return new ResponseEntity(bookingSaved, HttpStatus.CREATED);
 		}catch(BookingException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());

@@ -1,7 +1,7 @@
 package com.fernando.oliveira.booking.api.controller;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fernando.oliveira.booking.api.dto.PhoneDTO;
+import com.fernando.oliveira.booking.api.dto.SelectDTO;
 import com.fernando.oliveira.booking.api.dto.TravelerDTO;
 import com.fernando.oliveira.booking.model.domain.Phone;
 import com.fernando.oliveira.booking.model.domain.Traveler;
@@ -137,6 +138,35 @@ public class TravelerController {
 		
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@GetMapping("/find-select")
+	public ResponseEntity findSelect() {
+
+		try {
+			List<Traveler> resultList = travelerService.findAllOrderByName();
+			
+			
+			if (resultList.isEmpty()) {
+				return new ResponseEntity("Não foi encontrado resultados", HttpStatus.NO_CONTENT);
+			}
+			
+			List<SelectDTO> dtoList = convertToSelectDTO(resultList);
+
+			return ResponseEntity.ok(dtoList);
+		} catch (TravelerException e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
+	
+	private List<TravelerDTO> convertToSimpleDTOList(List<Traveler> resultList) {
+		
+		List<TravelerDTO> listDTO = resultList.stream().map(traveler -> new TravelerDTO(traveler.getId(), traveler.getName()))
+		        .collect(Collectors.toList());
+		
+		
+		return listDTO;
+	}
+
 	private TravelerDTO convertEntityToDTO(Traveler traveler) {
 	
 		PhoneDTO phoneDTO = phoneService.convertEntityToDTO(traveler.getPhone());
@@ -148,6 +178,16 @@ public class TravelerController {
 					.phone(phoneDTO)
 					.build();
 		return dto;
+	}
+	
+	private List<SelectDTO> convertToSelectDTO(List<Traveler> resultList) {
+		
+		List<SelectDTO> listDTO = resultList.stream().map(traveler -> new SelectDTO(traveler.getId(), traveler.getName()))
+		        .collect(Collectors.toList());
+		listDTO.add(0, new SelectDTO(new Long(0),"Selecione"));
+		
+		
+		return listDTO;
 	}
 	
 }

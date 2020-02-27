@@ -1,7 +1,7 @@
 package com.fernando.oliveira.booking.service.impl;
 
 import java.math.BigDecimal;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,23 +45,24 @@ public class BookingServiceImpl implements BookingService {
 	}
 
 	@Override
-	public Booking save(Booking booking, Long travelerId) {
+	public Booking save(Booking booking) {
 
-		validateBooking(booking, travelerId);
+		validateBooking(booking);
 
 		return repository.save(booking);
 
 	}
 
-	private void validateBooking(Booking booking, Long travelerId) {
+	private void validateBooking(Booking booking) {
 
 		try {
 
-			validateBookingTraveler(booking, travelerId);
+			validateBookingTraveler(booking);
 			validateAmount(booking);
 			validateDates(booking);
 			validateBookingStatus(booking);
 			validatePaymentStatus(booking);
+			validateConflicts(booking);
 
 		} catch (TravelerException e) {
 			throw new TravelerException(e.getMessage());
@@ -69,6 +70,31 @@ public class BookingServiceImpl implements BookingService {
 			throw new BookingException(e.getMessage());
 		}
 
+	}
+
+	private void validateConflicts(Booking booking) {
+		
+		Long id = booking.getId();
+		LocalDateTime checkIn = booking.getCheckIn();
+		LocalDateTime checkOut = booking.getCheckOut();
+		
+		List<Booking> resultList = new ArrayList<Booking>();
+		resultList.addAll(repositoryCustom.verifyInitAndFinalLimits(checkIn, checkOut));
+		resultList.addAll(repositoryCustom.verifyOutsideConsflicts(checkIn, checkOut));
+		
+		if(id == null && !resultList.isEmpty())		{
+			throw new BookingException("Já existe outra reserva para o período solicitado");
+		}
+		
+		for(Booking bkg : resultList) {
+			
+			if(bkg.getId() != booking.getId()) {
+				throw new BookingException("Já existe outra reserva para o período solicitado");
+			}
+		}
+		
+ 
+		
 	}
 
 	private void validatePaymentStatus(Booking booking) {
@@ -114,14 +140,14 @@ public class BookingServiceImpl implements BookingService {
 		
 	}
 
-	private void validateBookingTraveler(Booking booking, Long travelerId){
-		if (travelerId == null) {
+	private void validateBookingTraveler(Booking booking){
+		if (booking.getTraveler() == null) {
 
 			throw new BookingException("Viajante é obrigatório");
 			
 		} else {
 
-			Optional<Traveler> traveler = travelerService.findById(travelerId);
+			Optional<Traveler> traveler = travelerService.findById(booking.getTraveler().getId());
 			booking.setTraveler(traveler.get());
 		}
 		
@@ -157,7 +183,7 @@ public class BookingServiceImpl implements BookingService {
 				.paymentStatus(booking.getPaymentStatus())
 				.bookingStatus(booking.getBookingStatus())
 				.guests(booking.getGuests())
-				.travelerDTO(new TravelerDTO(booking.getTraveler().getId(), booking.getTraveler().getName()))
+				.travelerId(booking.getTraveler().getId())
 				.build();
 		return dto;
 	}
@@ -174,6 +200,7 @@ public class BookingServiceImpl implements BookingService {
 							.id(dto.getId())
 							.observation(dto.getObservation())
 							.paymentStatus(dto.getPaymentStatus())
+							.traveler(new Traveler(dto.getTravelerId()))
 							.build();
 							
 		return booking;
